@@ -1,0 +1,35 @@
+---
+import EntityIndexPage from '../../templates/EntityIndexPage.astro';
+import { getRoute } from '../../config/routes.config.ts';
+import { getFacts, getMedia, getSources, getVerificationDate } from '../../data/selectors.ts';
+
+const route = getRoute('operators');
+if (!route) throw new Error('Missing operators route configuration');
+const operatorFacts = getFacts([
+  'fact:operator-hawks', 'fact:operator-trick', 'fact:operator-tel-rea', 'fact:operator-cly',
+  'fact:operator-luco', 'fact:operator-jae', 'fact:operator-kabb',
+]);
+const scopeFacts = getFacts(['fact:operator-types', 'fact:hawks-mission-requirement']);
+const displayedFacts = [...scopeFacts, ...operatorFacts];
+const officialMedia = getMedia('media:operators-lineup');
+const sourceIds = [...new Set([...displayedFacts.flatMap((fact) => fact.sourceIds), officialMedia.sourceId])];
+const sources = getSources(sourceIds);
+const mediaSource = getSources([officialMedia.sourceId])[0];
+const verifiedDate = getVerificationDate([...displayedFacts, ...sources, officialMedia]);
+---
+
+<!-- Hawks remains on this owner page until a distinct player task and sufficient sourced depth justify a child URL. -->
+<EntityIndexPage
+  route={route}
+  eyebrow="Verified personnel files"
+  heading="Operators & Characters"
+  intro="Review the authored Operators introduced by Electronic Arts and keep their documented identities separate from unverified builds, rankings, and launch-day balance claims."
+  coverage="Electronic Arts describes two Operator types: Authored Operators and Custom Operators. This owner page covers the seven named Authored Operators documented in the official deep dive. Hawks remains required for story missions, while skirmish missions allow any Operator combination."
+  variant="operators"
+  entities={operatorFacts}
+  media={officialMedia}
+  mediaSource={mediaSource}
+  sources={sources}
+  verifiedDate={verifiedDate}
+  boundary="These biographies and the Authored-versus-Custom structure come from first-party pre-launch records. Complete launch rosters, stats, talents, weapons, and optimal builds remain unverified."
+/>

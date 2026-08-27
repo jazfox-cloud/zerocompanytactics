@@ -1,0 +1,30 @@
+---
+import EvidenceBadge from '../evidence/EvidenceBadge.astro';
+import LastVerified from '../evidence/LastVerified.astro';
+import type { FactRecord } from '../../config/schema.ts';
+
+interface Props { facts: FactRecord[] }
+const { facts } = Astro.props;
+---
+
+<div class="dossier-grid">
+  {facts.map((fact, index) => (
+    <article class:list={{ featured: index === 0 }} id={fact.id.replace('fact:operator-', '')}>
+      <div class="dossier-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
+      <div><p class="eyebrow">AUTHORED OPERATOR</p><h2>{fact.label}</h2><p>{Array.isArray(fact.value) ? fact.value.join(' · ') : String(fact.value)}</p></div>
+      <footer><EvidenceBadge level={fact.evidenceClass} /><LastVerified date={fact.lastVerified} /></footer>
+    </article>
+  ))}
+</div>
+
+<style>
+  .dossier-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  article { min-height: 270px; display: grid; grid-template-rows: auto 1fr auto; gap: 1rem; padding: 1.25rem; border: 1px solid var(--line); background: var(--surface-panel); }
+  article.featured { border-color: var(--accent-orange); background: linear-gradient(135deg, hsl(24 82% 62% / .12), transparent 55%), var(--surface-panel); }
+  .dossier-number { color: var(--line-strong); font-family: var(--font-display); font-size: 3.2rem; font-weight: 900; line-height: 1; }
+  h2 { margin: .2rem 0 .7rem; font-size: clamp(2rem, 4vw, 3.2rem); }
+  article p { color: var(--text-muted); }
+  footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .7rem; padding-top: .8rem; border-top: 1px solid var(--line); }
+  :global(.evidence-badge) { margin-inline: 0; }
+  @media (max-width: 720px) { .dossier-grid { grid-template-columns: 1fr; } article { min-height: 235px; } }
+</style>

@@ -1,0 +1,32 @@
+---
+import EvidenceBadge from '../evidence/EvidenceBadge.astro';
+import LastVerified from '../evidence/LastVerified.astro';
+import type { FactRecord } from '../../config/schema.ts';
+
+interface Props { facts: FactRecord[] }
+const { facts } = Astro.props;
+---
+
+<div class="class-table">
+  <div class="class-table__head" aria-hidden="true"><span>Specialization</span><span>Official role summary</span><span>Evidence</span></div>
+  {facts.map((fact) => (
+    <article id={fact.id.replace('fact:specialization-', '')}>
+      <h2>{fact.label}</h2>
+      <p>{Array.isArray(fact.value) ? fact.value.join(' · ') : String(fact.value)}</p>
+      <div><EvidenceBadge level={fact.evidenceClass} /><LastVerified date={fact.lastVerified} /></div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .class-table { border: 1px solid var(--line-strong); background: var(--line); }
+  .class-table__head, article { display: grid; grid-template-columns: minmax(150px, .65fr) minmax(0, 1.6fr) minmax(180px, .75fr); align-items: center; gap: 1rem; padding: 1rem 1.15rem; }
+  .class-table__head { color: var(--accent-cyan); background: var(--surface-deep); font-family: var(--font-mono); font-size: .66rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+  article { min-height: 118px; background: var(--surface-panel); }
+  article + article { border-top: 1px solid var(--line); }
+  h2 { margin: 0; font-size: 1.45rem; }
+  p { margin: 0; color: var(--text-muted); }
+  article > div { display: grid; justify-items: start; gap: .45rem; }
+  :global(.evidence-badge) { margin-inline: 0; }
+  @media (max-width: 760px) { .class-table__head { display: none; } article { grid-template-columns: 1fr; } }
+</style>

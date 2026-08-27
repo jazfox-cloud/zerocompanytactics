@@ -1,0 +1,34 @@
+---
+import EntityIndexPage from '../../templates/EntityIndexPage.astro';
+import { getRoute } from '../../config/routes.config.ts';
+import { getFacts, getMedia, getSources, getVerificationDate } from '../../data/selectors.ts';
+
+const route = getRoute('classes');
+if (!route) throw new Error('Missing classes route configuration');
+const classFacts = getFacts([
+  'fact:specialization-assault', 'fact:specialization-gunslinger', 'fact:specialization-heavy', 'fact:specialization-medic',
+  'fact:specialization-scoundrel', 'fact:specialization-scout', 'fact:specialization-sharpshooter', 'fact:specialization-soldier',
+]);
+const scopeFacts = getFacts(['fact:standard-specialization-count', 'fact:specialization-ability-slots']);
+const displayedFacts = [...scopeFacts, ...classFacts];
+const officialMedia = getMedia('media:tactical-gameplay');
+const sourceIds = [...new Set([...displayedFacts.flatMap((fact) => fact.sourceIds), officialMedia.sourceId])];
+const sources = getSources(sourceIds);
+const mediaSource = getSources([officialMedia.sourceId])[0];
+const verifiedDate = getVerificationDate([...displayedFacts, ...sources, officialMedia]);
+---
+
+<EntityIndexPage
+  route={route}
+  eyebrow="Verified role index"
+  heading="Classes & Specializations"
+  intro="Compare the eight standard Specializations that Electronic Arts documented for Zero Company, using role descriptions tied directly to the official gameplay deep dive."
+  coverage="This page owns the official standard Specialization set: Assault, Gunslinger, Heavy, Medic, Scoundrel, Scout, Sharpshooter, and Soldier. EA described an Ultimate, Standard, and Passive ability structure for each. It does not claim to catalogue every unique authored Operator setup or identify a top-ranked class."
+  variant="classes"
+  entities={classFacts}
+  media={officialMedia}
+  mediaSource={mediaSource}
+  sources={sources}
+  verifiedDate={verifiedDate}
+  boundary="The eight role summaries and three-part ability structure come from an official pre-launch deep dive whose details were marked subject to change. Launch-build skill trees, balance, weapons, and rankings remain unverified."
+/>
