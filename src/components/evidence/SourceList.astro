@@ -1,0 +1,22 @@
+---
+import type { SourceRecord } from '../../config/schema.ts';
+import EvidenceBadge from './EvidenceBadge.astro';
+
+interface Props { sources: SourceRecord[] }
+const { sources } = Astro.props;
+---
+
+<section class="sources" aria-labelledby="sources-heading">
+  <h2 id="sources-heading">Sources and evidence</h2>
+  <ul>
+    {sources.map((source) => (
+      <li data-public-allowed={String(source.publicAllowed)}>
+        <a href={source.url} rel="noreferrer">{source.label}</a>
+        <EvidenceBadge level={source.evidenceClass} />
+        <span>Version: {source.gameVersion}</span>
+        <span>Verified: {source.lastVerified}</span>
+        {!source.publicAllowed && <strong>Discovery only — not eligible for factual publication.</strong>}
+      </li>
+    ))}
+  </ul>
+</section>

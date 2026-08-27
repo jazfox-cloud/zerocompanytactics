@@ -1,0 +1,6 @@
+---
+interface Props { date: string; version?: string }
+const { date, version } = Astro.props;
+---
+
+<p class="last-verified">Last verified: <time datetime={date}>{date}</time>{version && <> · Version: {version}</>}</p>

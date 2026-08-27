@@ -1,0 +1,8 @@
+---
+import GuidePage from '../../templates/GuidePage.astro';
+import { getRoute } from '../../config/routes.config.ts';
+import { sources } from '../../config/sources.config.ts';
+const route = getRoute('guide');
+if (!route) throw new Error('Missing guide route configuration');
+---
+<GuidePage route={route} heading="Neutral guide demonstration" prerequisites={['Replace neutral text with a verified user task.']} steps={[{title:'Verify the task',description:'Confirm demand and required facts before writing.'},{title:'Attach evidence',description:'Record source, version, verification date, and publication eligibility.'}]} limitations={['This demonstration is not approved game guidance.']} verifiedDate="2026-08-24" sources={sources}><p>This route exists to verify the reusable guide layout. Keep it unpublished until the consuming project passes its evidence and URL gates.</p></GuidePage>

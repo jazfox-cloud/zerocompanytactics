@@ -1,0 +1,39 @@
+---
+import { features, siteConfig } from '../../config/index.ts';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, path, schema = [], noindex = false } = Astro.props;
+const canonical = new URL(path, siteConfig.origin).toString();
+const ga4Id = import.meta.env.PUBLIC_GA4_ID?.trim();
+const analyticsEnabled = features.analytics && Boolean(ga4Id);
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="canonical" href={canonical} />
+<link rel="icon" href={siteConfig.brand.faviconPath} />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary" />
+<title>{title}</title>
+{schema.map((item) => <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />)}
+{analyticsEnabled && <>
+  <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+  <script is:inline define:vars={{ ga4Id }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', ga4Id);
+  </script>
+</>}

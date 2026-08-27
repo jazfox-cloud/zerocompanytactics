@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LastVerified from '../components/evidence/LastVerified.astro';
+import SourceList from '../components/evidence/SourceList.astro';
+import type { RouteConfig, SourceRecord } from '../config/schema.ts';
+
+interface Props {
+  route: RouteConfig;
+  heading: string;
+  prerequisites: string[];
+  steps: { title: string; description: string }[];
+  limitations: string[];
+  verifiedDate: string;
+  sources: SourceRecord[];
+  noindex?: boolean;
+}
+
+const { route, heading, prerequisites, steps, limitations, verifiedDate, sources, noindex = !route.published } = Astro.props;
+---
+
+<BaseLayout title={route.title} description={route.description} path={route.path} noindex={noindex}>
+  <article class="shell article">
+    <header><p class="eyebrow">Procedural guide</p><h1>{heading}</h1><LastVerified date={verifiedDate} /></header>
+    <section><h2>Before you start</h2><ul>{prerequisites.map((item) => <li>{item}</li>)}</ul></section>
+    <ol class="steps">{steps.map((step) => <li><h2>{step.title}</h2><p>{step.description}</p></li>)}</ol>
+    <div class="body"><slot /></div>
+    <section><h2>Limitations</h2><ul>{limitations.map((item) => <li>{item}</li>)}</ul></section>
+    <SourceList sources={sources} />
+  </article>
+</BaseLayout>
+<style>.article{max-width:900px;padding:2rem 0}.article h1{font-size:clamp(2.3rem,7vw,4.8rem);line-height:1.02}.article section,.steps,.body{margin:2.5rem 0}.steps{display:grid;gap:1rem;padding:0;list-style:none}.steps li{padding:1.2rem;border:1px solid var(--line);border-radius:14px;background:var(--paper)}.steps h2{margin:0}.steps p,li,.body{color:var(--muted-strong)}</style>

@@ -1,0 +1,8 @@
+---
+import type { EvidenceClass } from '../../config/schema.ts';
+
+interface Props { level: EvidenceClass }
+const { level } = Astro.props;
+---
+
+<span class="evidence-badge" data-evidence={level}>{level.replace('_', ' ')}</span>

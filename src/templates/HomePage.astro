@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { RouteConfig } from '../config/schema.ts';
+
+interface Props {
+  route: RouteConfig;
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  signal: string;
+  links: { label: string; href: string; description: string }[];
+  trustItems: { title: string; description: string }[];
+}
+
+const { route, eyebrow, heading, intro, signal, links, trustItems } = Astro.props;
+---
+
+<BaseLayout title={route.title} description={route.description} path={route.path}>
+  <section class="shell hero">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{heading}</h1>
+    <p class="lede">{intro}</p>
+    <div class="signal"><strong>Current verified signal</strong><span>{signal}</span></div>
+  </section>
+  <section class="shell section">
+    <h2>Approved paths</h2>
+    <div class="card-grid">
+      {links.map((link) => <a class="card" href={link.href}><strong>{link.label}</strong><span>{link.description}</span></a>)}
+    </div>
+  </section>
+  <section class="shell section trust-grid" aria-label="Trust model">
+    {trustItems.map((item) => <article><h2>{item.title}</h2><p>{item.description}</p></article>)}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding: clamp(4rem, 10vw, 8rem) 0 3rem; }
+  h1 { max-width: 15ch; margin: .25rem 0 1rem; font-size: clamp(2.6rem, 8vw, 6rem); line-height: .98; letter-spacing: -.055em; }
+  .lede { max-width: 66ch; color: var(--muted-strong); font-size: 1.12rem; }
+  .signal { max-width: 760px; display: grid; gap: .25rem; margin-top: 2rem; padding: 1rem 1.2rem; border-left: 3px solid var(--accent); background: var(--paper); }
+  .signal span { color: var(--muted-strong); }
+  .section { padding: 2rem 0; }
+  .card-grid, .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .card { min-height: 150px; display: grid; align-content: end; gap: .5rem; padding: 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); text-decoration: none; }
+  .card span, .trust-grid p { color: var(--muted); }
+  .trust-grid article { border-top: 1px solid var(--accent); }
+  .trust-grid h2 { font-size: 1rem; }
+  @media (max-width: 760px) { .card-grid, .trust-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/content/Breadcrumbs.astro';
+import QuickAnswer from '../components/content/QuickAnswer.astro';
+import RelatedLinks from '../components/content/RelatedLinks.astro';
+import LastVerified from '../components/evidence/LastVerified.astro';
+import SourceList from '../components/evidence/SourceList.astro';
+import type { RouteConfig, SourceRecord } from '../config/schema.ts';
+
+interface Props {
+  route: RouteConfig;
+  question: string;
+  answer: string;
+  verifiedDate: string;
+  sources: SourceRecord[];
+  related: { label: string; href: string }[];
+  noindex?: boolean;
+}
+
+const { route, question, answer, verifiedDate, sources, related, noindex = !route.published } = Astro.props;
+---
+
+<BaseLayout title={route.title} description={route.description} path={route.path} noindex={noindex}>
+  <article class="shell article">
+    <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: route.title }]} />
+    <header><p class="eyebrow">Verified answer</p><h1>{question}</h1><LastVerified date={verifiedDate} /></header>
+    <QuickAnswer title={answer}><p>Use the supporting detail and evidence boundary below before acting on this answer.</p></QuickAnswer>
+    <div class="body"><slot /></div>
+    <SourceList sources={sources} />
+    <RelatedLinks links={related} />
+  </article>
+</BaseLayout>
+<style>.article{max-width:900px;padding:1.5rem 0 2rem}.article h1{font-size:clamp(2.3rem,7vw,4.8rem);line-height:1.02;letter-spacing:-.05em}.body{max-width:760px;margin:2.5rem 0;color:var(--muted-strong)}</style>

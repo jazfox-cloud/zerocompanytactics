@@ -1,0 +1,30 @@
+---
+import SeoHead from '../components/seo/SeoHead.astro';
+import SiteHeader from '../components/shell/SiteHeader.astro';
+import SiteFooter from '../components/shell/SiteFooter.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, path, schema = [], noindex = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SeoHead title={title} description={description} path={path} schema={schema} noindex={noindex} />
+  </head>
+  <body>
+    <SiteHeader />
+    <main id="main-content">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

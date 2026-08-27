@@ -1,0 +1,7 @@
+---
+import HomePage from '../templates/HomePage.astro';
+import { getRoute } from '../config/routes.config.ts';
+const route = getRoute('home');
+if (!route) throw new Error('Missing home route configuration');
+---
+<HomePage route={route} eyebrow="Evidence-first starter" heading="Build the guide your evidence can support." intro="A neutral Astro foundation for independent game guide sites. Configure identity, approve routes, and attach evidence before publishing." signal="Only the starter homepage is published. Demonstration templates remain noindex until a consuming project supplies verified content." links={[]} trustItems={[{title:'Official scope',description:'Exact facts require an eligible source.'},{title:'Visible uncertainty',description:'Unknown and stale fields remain labeled.'},{title:'Independent projects',description:'Every game keeps its own data, domain, and release chain.'}]} />
