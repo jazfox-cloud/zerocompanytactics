@@ -3,11 +3,21 @@ import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 const identityRules = [
-  { label: 'reference identity', pattern: /dragon\s*sword|dragonswordguide/gi },
-  { label: 'consumer identity', pattern: /wardogs(?:\.wiki)?/gi },
+  { label: 'starter identity', pattern: /example\s+game\s+guide/gi },
+  { label: 'reference identity', pattern: /dragon\s*sword|dragonswordguide|resonance\s+guide|aliens[\s-]*fireteam(?:\s+elite)?(?:\s+2)?/gi },
+  { label: 'reference consumer identity', pattern: /wardogs(?:\.wiki)?/gi },
   { label: 'production analytics id', pattern: /\bG-[A-Z0-9]{6,}\b/g },
 ];
-const allowedHosts = new Set(['example.invalid', 'store.example.invalid', 'www.googletagmanager.com', 'www.sitemaps.org', 'www.w3.org']);
+const allowedHosts = new Set([
+  'zero-company-field-guide.invalid',
+  'www.ea.com',
+  'help.ea.com',
+  'news.ea.com',
+  'www.youtube.com',
+  'www.googletagmanager.com',
+  'www.sitemaps.org',
+  'www.w3.org',
+]);
 const extensions = new Set(['.astro', '.css', '.html', '.js', '.json', '.md', '.mjs', '.svg', '.ts']);
 
 function escapeRegExp(value) {

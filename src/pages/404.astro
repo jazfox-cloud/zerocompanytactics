@@ -1,5 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getRoute } from '../config/routes.config.ts';
+
+const route = getRoute('not-found');
+if (!route) throw new Error('Missing not-found route configuration');
 ---
-<BaseLayout title="Page not found" description="The requested page was not found." path="/404/" noindex={true}><section class="shell not-found"><p class="eyebrow">404</p><h1>Page not found</h1><p><a href="/">Return home</a></p></section></BaseLayout>
-<style>.not-found{padding:7rem 0}.not-found h1{font-size:clamp(2.5rem,8vw,6rem)}</style>
+<BaseLayout title={route.title} description={route.description} path={route.path} noindex={true}>
+  <section class="shell not-found">
+    <p class="eyebrow">404 · MISSION NOT FOUND</p>
+    <h1>This route is outside the current field map.</h1>
+    <p>The page may not exist, or its evidence gate may not be ready for this local build.</p>
+    <a href="/">Return to the field guide</a>
+  </section>
+</BaseLayout>
+<style>.not-found{max-width:900px;padding:7rem 0}.not-found h1{max-width:12ch;font-size:clamp(2.5rem,8vw,6rem)}.not-found p{color:var(--text-muted)}.not-found a{min-height:44px;display:inline-flex;align-items:center;margin-top:1rem;font-weight:850}</style>

@@ -5,6 +5,9 @@ import { scanText } from '../scripts/scan-project-residue.mjs';
 test('detects reference-site identities', () => {
   assert.ok(scanText('DragonSwordGuide').length > 0);
   assert.ok(scanText('WARDOGS field guide').length > 0);
+  assert.ok(scanText('Example Game Guide').length > 0);
+  assert.ok(scanText('Resonance guide').length > 0);
+  assert.ok(scanText('Aliens Fireteam Elite 2').length > 0);
 });
 
 test('detects unapproved production domains and analytics IDs', () => {
@@ -12,8 +15,16 @@ test('detects unapproved production domains and analytics IDs', () => {
   assert.ok(scanText('G-ABCDEF12').length > 0);
 });
 
-test('allows neutral placeholder and generic integration domains', () => {
-  assert.deepEqual(scanText('https://example.invalid and https://www.googletagmanager.com'), []);
+test('allows only approved project, official evidence, and generic integration domains', () => {
+  const approved = [
+    'https://zero-company-field-guide.invalid',
+    'https://www.ea.com/games/starwars/zero-company',
+    'https://help.ea.com/en/articles/star-wars/zero-company/',
+    'https://news.ea.com/press-releases/',
+    'https://www.youtube.com/watch?v=official',
+    'https://www.googletagmanager.com',
+  ].join(' ');
+  assert.deepEqual(scanText(approved), []);
 });
 
 test('allows the consuming project identity only when explicitly declared', () => {

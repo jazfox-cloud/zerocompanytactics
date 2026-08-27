@@ -1,5 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Privacy notice scaffold" description="Non-production privacy notice scaffold." path="/privacy/" noindex={true}><article class="shell legal"><h1>Privacy notice scaffold</h1><p>Replace this text with a reviewed privacy notice that matches the consuming site's actual analytics, advertising, hosting, and contact practices before publication.</p></article></BaseLayout>
-<style>.legal{max-width:760px;padding:4rem 0}</style>
+<BaseLayout title="Privacy — Zero Company Field Guide" description="Privacy status for the local-only Zero Company Field Guide build." path="/privacy/" noindex={true}>
+  <article class="shell legal">
+    <p class="eyebrow">LOCAL-ONLY NOTICE</p>
+    <h1>Privacy</h1>
+    <p>This development build is local-only and does not enable analytics or advertising. It does not intentionally set measurement or advertising cookies.</p>
+    <h2>External links</h2>
+    <p>Links to Electronic Arts and YouTube leave this local guide. Those services apply their own privacy practices after you follow a link.</p>
+    <h2>Before publication</h2>
+    <p>Hosting, contact, analytics, consent, and advertising disclosures must be reviewed against the actual production configuration before this site can be published.</p>
+  </article>
+</BaseLayout>
+<style>.legal{max-width:780px;padding:4rem 0}.legal h1{font-size:clamp(2.7rem,7vw,5rem)}.legal h2{margin-top:2.2rem}.legal p{color:var(--muted-strong)}</style>

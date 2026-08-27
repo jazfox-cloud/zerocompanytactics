@@ -1,5 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Terms scaffold" description="Non-production terms scaffold." path="/terms/" noindex={true}><article class="shell legal"><h1>Terms scaffold</h1><p>Replace this text with reviewed terms that match the consuming site's actual ownership, acceptable-use, attribution, and limitation practices before publication.</p></article></BaseLayout>
-<style>.legal{max-width:760px;padding:4rem 0}</style>
+<BaseLayout title="Terms — Zero Company Field Guide" description="Use and independence terms for the local-only Zero Company Field Guide build." path="/terms/" noindex={true}>
+  <article class="shell legal">
+    <p class="eyebrow">LOCAL-ONLY TERMS</p>
+    <h1>Terms and independence</h1>
+    <p>This independent guide is not affiliated with, endorsed by, or operated by Electronic Arts, Lucasfilm Games, Bit Reactor, or Respawn Entertainment.</p>
+    <h2>Evidence boundary</h2>
+    <p>Game facts are scoped to the sources and verification dates shown on each page. Search-demand records guide page planning but do not establish game mechanics.</p>
+    <h2>Media and marks</h2>
+    <p>STAR WARS, game imagery, and related names belong to their respective owners. Official imagery in this local build is retained for evaluation with visible attribution and source links; production usage requires a separate rights review.</p>
+    <h2>No publication approval</h2>
+    <p>This local-only build is not a production service. Publication, analytics, advertising, and commercial terms remain outside the current authorization.</p>
+  </article>
+</BaseLayout>
+<style>.legal{max-width:780px;padding:4rem 0}.legal h1{font-size:clamp(2.7rem,7vw,5rem)}.legal h2{margin-top:2.2rem}.legal p{color:var(--muted-strong)}</style>
