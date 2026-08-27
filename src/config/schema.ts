@@ -1,5 +1,16 @@
 export type LocaleCode = 'en';
 export type EvidenceClass = 'OFFICIAL' | 'FIRST_HAND' | 'COMMUNITY_SIGNAL' | 'SEARCH_SIGNAL' | 'UNKNOWN';
+export type ReleaseState = 'LOCAL_ONLY' | 'REVIEW_READY' | 'PUBLISHED';
+export type RouteKind = 'content' | 'legal' | 'error';
+export type RouteId =
+  | 'home'
+  | 'classes'
+  | 'operators'
+  | 'difficulty-permadeath'
+  | 'squad-size-operators'
+  | 'privacy'
+  | 'terms'
+  | 'not-found';
 
 export interface SiteConfig {
   name: string;
@@ -13,10 +24,12 @@ export interface SiteConfig {
 }
 
 export interface RouteConfig {
-  id: string;
+  id: RouteId;
   path: string;
   title: string;
   description: string;
+  kind: RouteKind;
+  releaseState: ReleaseState;
   published: boolean;
   sitemap: boolean;
 }

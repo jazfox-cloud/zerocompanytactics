@@ -22,6 +22,9 @@ export function validateConfig(bundle) {
   }
 
   for (const route of bundle.routes) {
+    if ((route.releaseState === 'PUBLISHED') !== route.published) {
+      errors.push(`route publication state is inconsistent: ${route.id}`);
+    }
     if (route.published && (!route.title?.trim() || !route.description?.trim())) {
       errors.push(`published route metadata is incomplete: ${route.id}`);
     }

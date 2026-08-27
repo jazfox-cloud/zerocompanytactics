@@ -1,8 +1,0 @@
----
-import TimelinePage from '../../templates/TimelinePage.astro';
-import { getRoute } from '../../config/routes.config.ts';
-import { sources } from '../../config/sources.config.ts';
-const route = getRoute('status');
-if (!route) throw new Error('Missing status route configuration');
----
-<TimelinePage route={route} heading="Neutral status timeline" verifiedDate="2026-08-24" sources={sources} items={[{state:'released',date:'Known date',title:'Verified release state',summary:'Use only when a current eligible source supports the event.'},{state:'announced',date:'Announced date',title:'Officially announced',summary:'Keep plans separate from shipped features.'},{state:'unknown',date:'Unknown',title:'Unverified timing',summary:'Do not convert missing dates into estimates.'}]} />

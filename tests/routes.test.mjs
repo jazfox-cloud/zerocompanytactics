@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { verifyRoutes } from '../scripts/verify-routes.mjs';
 
 const baseRoutes = [
-  { id: 'home', path: '/', title: 'Home', description: 'Home description', published: true, sitemap: true },
-  { id: 'guide', path: '/guide/', title: 'Guide', description: 'Guide description', published: false, sitemap: false },
+  { id: 'home', path: '/', title: 'Home', description: 'Home description', kind: 'content', releaseState: 'PUBLISHED', published: true, sitemap: true },
+  { id: 'guide', path: '/guide/', title: 'Guide', description: 'Guide description', kind: 'content', releaseState: 'LOCAL_ONLY', published: false, sitemap: false },
 ];
 
 test('accepts a consistent route contract', () => {
@@ -29,5 +29,17 @@ test('rejects sitemap-enabled unpublished routes', () => {
 });
 
 test('rejects navigation to unpublished routes', () => {
-  assert.ok(verifyRoutes(baseRoutes, [{ label: 'Guide', href: '/guide/' }]).includes('navigation target is not published: /guide/'));
+  const routes = structuredClone(baseRoutes);
+  routes[1].releaseState = 'REVIEW_READY';
+  assert.ok(verifyRoutes(routes, [{ label: 'Guide', href: '/guide/' }]).includes('navigation target is neither local nor published: /guide/'));
+});
+
+test('allows local-only routes in local preview navigation', () => {
+  assert.deepEqual(verifyRoutes(baseRoutes, [{ label: 'Guide', href: '/guide/' }]), []);
+});
+
+test('rejects route publication state mismatches', () => {
+  const routes = structuredClone(baseRoutes);
+  routes[0].releaseState = 'LOCAL_ONLY';
+  assert.ok(verifyRoutes(routes, []).includes('route publication state is inconsistent: home'));
 });

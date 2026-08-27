@@ -15,8 +15,8 @@ const validBundle = {
     disclaimer: 'Independent guide. Not affiliated with the developer or publisher.',
   },
   routes: [
-    { id: 'home', path: '/', title: 'Example Game Guide', description: 'Neutral starter home.', published: true, sitemap: true },
-    { id: 'guide', path: '/guide/', title: 'Example Guide', description: 'Neutral guide demonstration.', published: false, sitemap: false },
+    { id: 'home', path: '/', title: 'Example Game Guide', description: 'Neutral starter home.', kind: 'content', releaseState: 'PUBLISHED', published: true, sitemap: true },
+    { id: 'guide', path: '/guide/', title: 'Example Guide', description: 'Neutral guide demonstration.', kind: 'content', releaseState: 'LOCAL_ONLY', published: false, sitemap: false },
   ],
   navigation: [{ label: 'Home', href: '/' }],
   sources: [{
@@ -29,6 +29,18 @@ const validBundle = {
 test('committed neutral configuration is valid', async () => {
   const { configBundle } = await import('../src/config/index.ts');
   assert.deepEqual(validateConfig(configBundle), []);
+});
+
+test('committed project identity and local-only content routes are explicit', async () => {
+  const { features, routes, siteConfig } = await import('../src/config/index.ts');
+  assert.equal(siteConfig.name, 'Zero Company Field Guide');
+  assert.equal(siteConfig.origin, 'https://zero-company-field-guide.invalid');
+  assert.deepEqual(features, { analytics: false, advertising: false, localization: false, sitemap: true });
+  assert.deepEqual(
+    routes.filter((route) => route.kind === 'content').map((route) => route.path),
+    ['/', '/classes/', '/operators/', '/guides/difficulty-permadeath/', '/guides/squad-size-operators/'],
+  );
+  assert.ok(routes.filter((route) => route.kind === 'content').every((route) => route.releaseState === 'LOCAL_ONLY' && !route.published));
 });
 
 test('rejects an origin that is not an absolute URL', () => {
@@ -47,4 +59,10 @@ test('rejects published routes without complete metadata', () => {
   const bundle = structuredClone(validBundle);
   bundle.routes[0].title = '';
   assert.ok(validateConfig(bundle).includes('published route metadata is incomplete: home'));
+});
+
+test('rejects published flags that disagree with release state', () => {
+  const bundle = structuredClone(validBundle);
+  bundle.routes[0].releaseState = 'LOCAL_ONLY';
+  assert.ok(validateConfig(bundle).includes('route publication state is inconsistent: home'));
 });

@@ -1,7 +1,0 @@
----
-import EntityIndexPage from '../../templates/EntityIndexPage.astro';
-import { getRoute } from '../../config/routes.config.ts';
-const route = getRoute('entities');
-if (!route) throw new Error('Missing entities route configuration');
----
-<EntityIndexPage route={route} heading="Neutral entity index" coverage="This demonstration contains one neutral record and makes no completeness claim." entities={[{id:'verified-example',name:'Verified example',summary:'Replace only with an entity whose required fields pass the consuming project evidence contract.',evidenceClass:'UNKNOWN',verifiedDate:'2026-08-24'}]} />

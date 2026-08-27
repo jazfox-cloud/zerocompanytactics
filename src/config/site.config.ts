@@ -1,15 +1,15 @@
 import type { SiteConfig } from './schema.ts';
 
 export const siteConfig: SiteConfig = {
-  name: 'Example Game Guide',
-  shortName: 'Example Guide',
-  origin: 'https://example.invalid',
-  description: 'A neutral evidence-first game guide starter.',
+  name: 'Zero Company Field Guide',
+  shortName: 'ZC Field Guide',
+  origin: 'https://zero-company-field-guide.invalid',
+  description: 'An independent, evidence-first field guide to STAR WARS Zero Company classes, operators, and squad decisions.',
   defaultLocale: 'en',
-  publisherName: 'Example Guide',
+  publisherName: 'Zero Company Field Guide',
   brand: {
     logoPath: '/brand/logo.svg',
     faviconPath: '/brand/favicon.svg',
   },
-  disclaimer: 'Independent guide. Not affiliated with the developer or publisher.',
+  disclaimer: 'Independent guide. Not affiliated with Electronic Arts, Lucasfilm Games, Bit Reactor, or Respawn Entertainment.',
 };

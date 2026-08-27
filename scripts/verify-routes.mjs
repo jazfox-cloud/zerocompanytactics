@@ -11,6 +11,9 @@ export function verifyRoutes(routes, navigation) {
     ids.add(route.id);
     paths.add(route.path);
 
+    if ((route.releaseState === 'PUBLISHED') !== route.published) {
+      errors.push(`route publication state is inconsistent: ${route.id}`);
+    }
     if (route.published && (!route.title?.trim() || !route.description?.trim())) {
       errors.push(`published route metadata is incomplete: ${route.id}`);
     }
@@ -21,7 +24,7 @@ export function verifyRoutes(routes, navigation) {
   for (const item of navigation) {
     const route = routeByPath.get(item.href);
     if (!route) errors.push(`navigation target is not configured: ${item.href}`);
-    else if (!route.published) errors.push(`navigation target is not published: ${item.href}`);
+    else if (!route.published && route.releaseState !== 'LOCAL_ONLY') errors.push(`navigation target is neither local nor published: ${item.href}`);
   }
 
   return [...new Set(errors)];
