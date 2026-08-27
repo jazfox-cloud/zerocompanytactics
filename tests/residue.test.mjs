@@ -17,11 +17,12 @@ test('detects unapproved production domains and analytics IDs', () => {
 
 test('allows only approved project, official evidence, and generic integration domains', () => {
   const approved = [
-    'https://zero-company-field-guide.invalid',
+    'https://zerocompanytactics.com',
     'https://www.ea.com/games/starwars/zero-company',
     'https://help.ea.com/en/articles/star-wars/zero-company/',
     'https://news.ea.com/press-releases/',
     'https://www.youtube.com/watch?v=official',
+    'https://www.youtube-nocookie.com/embed/official',
     'https://www.googletagmanager.com',
   ].join(' ');
   assert.deepEqual(scanText(approved), []);

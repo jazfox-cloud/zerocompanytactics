@@ -34,7 +34,8 @@ test('committed neutral configuration is valid', async () => {
 test('committed project identity and local-only content routes are explicit', async () => {
   const { features, routes, siteConfig } = await import('../src/config/index.ts');
   assert.equal(siteConfig.name, 'Zero Company Field Guide');
-  assert.equal(siteConfig.origin, 'https://zero-company-field-guide.invalid');
+  assert.equal(siteConfig.origin, 'https://zerocompanytactics.com');
+  assert.equal(siteConfig.brand.faviconPath, '/favicon.ico?v=3');
   assert.deepEqual(features, { analytics: false, advertising: false, localization: false, sitemap: true });
   assert.deepEqual(
     routes.filter((route) => route.kind === 'content').map((route) => route.path),

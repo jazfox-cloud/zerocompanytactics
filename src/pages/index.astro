@@ -12,7 +12,8 @@ const specializationCount = getFact('fact:standard-specialization-count');
 const operatorTypes = getFact('fact:operator-types');
 const displayedFacts = [gameType, releaseDate, specializationCount, operatorTypes];
 const officialMedia = getMedia('media:official-keyart');
-const sourceIds = [...new Set([...displayedFacts.flatMap((fact) => fact.sourceIds), officialMedia.sourceId])];
+const trailerSource = getSources(['source:official-gameplay-trailer'])[0];
+const sourceIds = [...new Set([...displayedFacts.flatMap((fact) => fact.sourceIds), officialMedia.sourceId, trailerSource.id])];
 const sources = getSources(sourceIds);
 const mediaSource = getSources([officialMedia.sourceId])[0];
 const verifiedDate = getVerificationDate([...displayedFacts, ...sources, officialMedia]);
@@ -25,6 +26,7 @@ const verifiedDate = getVerificationDate([...displayedFacts, ...sources, officia
   intro="A source-bounded guide to STAR WARS Zero Company classes, operators, permadeath, and squad planning. We publish verified answers first and keep launch-build claims visibly scoped."
   media={officialMedia}
   mediaSource={mediaSource}
+  trailerSource={trailerSource}
   tasks={[
     { label: 'Classes & Specializations', href: '/classes/', description: 'Compare the eight standard Specializations documented by EA.', status: 'BOUNDED' },
     { label: 'Operators & Characters', href: '/operators/', description: 'Review the officially introduced Authored and Custom Operator structure.', status: 'BOUNDED' },

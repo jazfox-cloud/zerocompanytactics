@@ -20,7 +20,12 @@ const analyticsEnabled = features.analytics && Boolean(ga4Id);
 <meta name="description" content={description} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 <link rel="canonical" href={canonical} />
-<link rel="icon" href={siteConfig.brand.faviconPath} />
+<link rel="shortcut icon" href={siteConfig.brand.faviconPath} type="image/x-icon" />
+<link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png?v=3" />
+<link rel="icon" type="image/png" sizes="16x16" href="/brand/favicon-16.png?v=3" />
+<link rel="icon" type="image/png" sizes="192x192" href="/brand/favicon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="/brand/favicon-512.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="/brand/favicon-192.png?v=3" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

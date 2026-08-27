@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import OfficialMedia from '../components/game/OfficialMedia.astro';
+import OfficialTrailer from '../components/game/OfficialTrailer.astro';
 import TacticalTaskBoard from '../components/game/TacticalTaskBoard.astro';
 import VerificationPanel from '../components/game/VerificationPanel.astro';
 import SourceList from '../components/evidence/SourceList.astro';
@@ -13,6 +14,7 @@ interface Props {
   intro: string;
   media: MediaRecord;
   mediaSource: SourceRecord;
+  trailerSource: SourceRecord;
   tasks: { label: string; href: string; description: string; status: 'VERIFIED' | 'BOUNDED' }[];
   facts: { label: string; value: string }[];
   sources: SourceRecord[];
@@ -20,7 +22,7 @@ interface Props {
   boundary: string;
 }
 
-const { route, eyebrow, heading, intro, media, mediaSource, tasks, facts, sources, verifiedDate, boundary } = Astro.props;
+const { route, eyebrow, heading, intro, media, mediaSource, trailerSource, tasks, facts, sources, verifiedDate, boundary } = Astro.props;
 ---
 
 <BaseLayout title={route.title} description={route.description} path={route.path} noindex={!route.published}>
@@ -43,6 +45,11 @@ const { route, eyebrow, heading, intro, media, mediaSource, tasks, facts, source
     <TacticalTaskBoard links={tasks} />
   </section>
 
+  <section class="shell trailer-section" aria-labelledby="trailer-heading">
+    <div class="section-heading"><div><p class="eyebrow">OFFICIAL FOOTAGE</p><h2 id="trailer-heading">See the tactical layer in motion</h2></div><p>Watch EA's official announcement trailer before choosing a class path.</p></div>
+    <OfficialTrailer source={trailerSource} title="STAR WARS Zero Company official announcement trailer" videoId="WxLUZ1omFA8" />
+  </section>
+
   <section class="shell game-overview" aria-labelledby="overview-heading">
     <div><p class="eyebrow">OFFICIAL SCOPE</p><h2 id="overview-heading">The verified field brief</h2><p>These launch-facing facts come from the first-party records listed below. Search demand informed the task order; it did not supply game facts.</p></div>
     <dl>{facts.map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>
@@ -63,9 +70,11 @@ const { route, eyebrow, heading, intro, media, mediaSource, tasks, facts, source
   .action { min-height: 46px; display: inline-flex; align-items: center; padding: .7rem 1rem; border: 1px solid var(--line-strong); color: var(--text-main); font-weight: 850; text-decoration: none; text-transform: uppercase; }
   .action--primary { color: var(--surface-deep); border-color: var(--accent-orange); background: var(--accent-orange); }
   .official-action { min-height: 44px; display: inline-flex; align-items: center; margin-top: .7rem; font-size: .82rem; font-weight: 800; }
-  .task-section, .game-overview, .evidence-section { padding: 2.5rem 0; }
+  .task-section, .trailer-section, .game-overview, .evidence-section { padding: 2.5rem 0; }
   .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
   .section-heading h2, .game-overview h2 { margin: .2rem 0 1rem; font-size: clamp(2rem, 5vw, 3.6rem); }
+  .trailer-section { display: grid; gap: 1rem; }
+  .trailer-section .section-heading > p { max-width: 38ch; color: var(--text-muted); }
   .game-overview { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(2rem, 7vw, 6rem); }
   .game-overview p { color: var(--text-muted); }
   dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--line); }
@@ -73,6 +82,6 @@ const { route, eyebrow, heading, intro, media, mediaSource, tasks, facts, source
   dt { color: hsl(201 18% 38%); font-family: var(--font-mono); font-size: .68rem; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
   dd { margin: .65rem 0 0; color: var(--text-dark); font-size: 1.05rem; font-weight: 800; }
   .evidence-section { display: grid; gap: 1rem; }
-  @media (max-width: 900px) { .hero, .game-overview { grid-template-columns: 1fr; } .hero { padding-top: 3rem; } }
+  @media (max-width: 900px) { .hero, .game-overview { grid-template-columns: 1fr; } .hero { padding-top: 3rem; } .trailer-section .section-heading { align-items: flex-start; flex-direction: column; } }
   @media (max-width: 560px) { dl { grid-template-columns: 1fr; } }
 </style>

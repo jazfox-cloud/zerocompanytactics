@@ -9,11 +9,12 @@ const identityRules = [
   { label: 'production analytics id', pattern: /\bG-[A-Z0-9]{6,}\b/g },
 ];
 const allowedHosts = new Set([
-  'zero-company-field-guide.invalid',
+  'zerocompanytactics.com',
   'www.ea.com',
   'help.ea.com',
   'news.ea.com',
   'www.youtube.com',
+  'www.youtube-nocookie.com',
   'www.googletagmanager.com',
   'www.sitemaps.org',
   'www.w3.org',

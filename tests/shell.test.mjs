@@ -23,6 +23,25 @@ test('SEO derives identity from configuration and gates analytics', async () => 
   assert.doesNotMatch(seo, /G-[A-Z0-9]{6,}/);
 });
 
+test('SEO exposes cache-safe favicon candidates in deterministic order', async () => {
+  const seo = await source('src/components/seo/SeoHead.astro');
+  const expected = [
+    'rel="shortcut icon" href={siteConfig.brand.faviconPath} type="image/x-icon"',
+    'rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png?v=3"',
+    'rel="icon" type="image/png" sizes="16x16" href="/brand/favicon-16.png?v=3"',
+    'rel="icon" type="image/png" sizes="192x192" href="/brand/favicon-192.png"',
+    'rel="icon" type="image/png" sizes="512x512" href="/brand/favicon-512.png"',
+    'rel="apple-touch-icon" sizes="192x192" href="/brand/favicon-192.png?v=3"',
+  ];
+  let previous = -1;
+  for (const candidate of expected) {
+    const current = seo.indexOf(candidate);
+    assert.ok(current > previous, `missing or misordered favicon declaration: ${candidate}`);
+    previous = current;
+  }
+  assert.doesNotMatch(seo, /<link rel="icon" href={siteConfig\.brand\.faviconPath}/);
+});
+
 test('source list exposes evidence metadata', async () => {
   const list = await source('src/components/evidence/SourceList.astro');
   assert.match(list, /evidenceClass/);
@@ -41,6 +60,16 @@ test('official media requires rendered dimensions, attribution, and source fallb
   assert.match(media, /media\.attribution/);
   assert.match(media, /View official source/);
   assert.match(media, /source\.url/);
+});
+
+test('official trailer uses the privacy-enhanced player and visible YouTube fallback', async () => {
+  const trailer = await source('src/components/game/OfficialTrailer.astro');
+  assert.match(trailer, /youtube-nocookie\.com\/embed/);
+  assert.match(trailer, /loading="lazy"/);
+  assert.match(trailer, /title={title}/);
+  assert.match(trailer, /allowfullscreen/);
+  assert.match(trailer, /source\.url/);
+  assert.match(trailer, /Watch on YouTube/);
 });
 
 test('shell exposes local navigation, independent identity, and official destination', async () => {

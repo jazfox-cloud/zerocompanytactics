@@ -11,12 +11,16 @@ test('home resolves canonical records and puts task entry before game overview',
   const template = await source('src/templates/HomePage.astro');
   assert.match(page, /getFact\('fact:game-type'\)/);
   assert.match(page, /getMedia\('media:official-keyart'\)/);
+  assert.match(page, /source:official-gameplay-trailer/);
   assert.match(page, /getSources/);
   assert.match(template, /Compare verified classes/);
   assert.match(template, /Review verified operators/);
   assert.match(template, /OfficialMedia/);
   assert.match(template, /TacticalTaskBoard/);
+  assert.match(template, /OfficialTrailer/);
   assert.ok(template.indexOf('<TacticalTaskBoard') < template.indexOf('game-overview'));
+  assert.ok(template.indexOf('<TacticalTaskBoard') < template.indexOf('<OfficialTrailer'));
+  assert.ok(template.indexOf('<OfficialTrailer') < template.indexOf('game-overview'));
   assert.doesNotMatch(template, /Single-player, turn-based tactics game/);
 });
 

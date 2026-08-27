@@ -23,7 +23,7 @@ function extract(html, pattern) {
   return decode(html.match(pattern)?.[1]?.trim() ?? '');
 }
 
-export function validateContentPageHtml(html, { routePath, expectedLinks = [], expectedMedia } = {}) {
+export function validateContentPageHtml(html, { routePath, expectedLinks = [], expectedMedia, expectedTrailer = false } = {}) {
   const errors = [];
   const title = extract(html, /<title>([^<]*)<\/title>/i);
   const description = extract(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
@@ -40,6 +40,18 @@ export function validateContentPageHtml(html, { routePath, expectedLinks = [], e
 
   for (const href of expectedLinks) {
     if (!html.includes(`href="${href}"`)) errors.push(`expected link is missing: ${href}`);
+  }
+
+  for (const faviconHref of ['/favicon.ico?v=3', '/brand/favicon-32.png?v=3', '/brand/favicon-16.png?v=3', '/brand/favicon-192.png', '/brand/favicon-512.png', '/brand/favicon-192.png?v=3']) {
+    if (!html.includes(`href="${faviconHref}"`)) errors.push(`favicon declaration is missing: ${faviconHref}`);
+  }
+
+  if (expectedTrailer) {
+    if (!html.includes('https://www.youtube-nocookie.com/embed/WxLUZ1omFA8?rel=0')) errors.push('official trailer privacy-enhanced embed is missing');
+    if (!/<iframe[^>]+loading="lazy"/i.test(html)) errors.push('official trailer must load lazily');
+    if (!html.includes('title="STAR WARS Zero Company official announcement trailer"')) errors.push('official trailer title is missing');
+    if (!html.includes('href="https://www.youtube.com/watch?v=WxLUZ1omFA8"')) errors.push('official trailer YouTube fallback is missing');
+    if (!/Watch on YouTube/i.test(html)) errors.push('official trailer fallback label is missing');
   }
 
   if (expectedMedia) {
@@ -79,7 +91,7 @@ export async function validateBuiltOutput(distRoot = path.join(process.cwd(), 'd
       continue;
     }
     const expectedMedia = media.find((record) => record.placement === route.path);
-    for (const error of validateContentPageHtml(html, { routePath: route.path, expectedLinks: expectedLinks[route.path], expectedMedia })) {
+    for (const error of validateContentPageHtml(html, { routePath: route.path, expectedLinks: expectedLinks[route.path], expectedMedia, expectedTrailer: route.path === '/' })) {
       errors.push(`${route.path}: ${error}`);
     }
     metadata.push({ route: route.path, title: extract(html, /<title>([^<]*)<\/title>/i), description: extract(html, /<meta\s+name="description"\s+content="([^"]*)"/i) });
