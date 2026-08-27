@@ -28,3 +28,11 @@ test('legal scaffolds remain noindex until replaced', async () => {
     assert.match(content, /noindex={true}/);
   }
 });
+
+test('tactical components stay prop-driven and route-safe', async () => {
+  for (const name of ['TacticalTaskBoard', 'VerificationPanel']) {
+    const content = await source(`src/components/game/${name}.astro`);
+    assert.match(content, /Astro\.props/);
+    assert.doesNotMatch(content, /from ['"]\.\.\/\.\.\/pages\//);
+  }
+});

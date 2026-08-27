@@ -7,8 +7,6 @@ import { sources } from '../src/config/sources.config.ts';
 import { media } from '../src/data/media.ts';
 import { readJpegDimensions, validateMediaAssets } from '../scripts/validate-media-assets.mjs';
 
-const root = new URL('../', import.meta.url);
-
 test('all recorded evaluation images exist and match decoded JPEG dimensions', async () => {
   assert.deepEqual(await validateMediaAssets(new URL('../', import.meta.url)), []);
   for (const item of media) {

@@ -1,0 +1,25 @@
+---
+interface Props {
+  date: string;
+  evidence: string;
+  boundary: string;
+}
+
+const { date, evidence, boundary } = Astro.props;
+---
+
+<aside class="verification-panel" aria-label="Evidence boundary">
+  <div><span>VERIFIED</span><strong>{date}</strong></div>
+  <p><b>Evidence:</b> {evidence}</p>
+  <p><b>Boundary:</b> {boundary}</p>
+</aside>
+
+<style>
+  .verification-panel { display: grid; grid-template-columns: 150px 1fr 1fr; gap: 1rem; padding: 1rem; border: 1px solid var(--line-strong); background: var(--surface-panel); }
+  .verification-panel div { display: grid; align-content: start; gap: .25rem; }
+  .verification-panel span { color: var(--accent-cyan); font-family: var(--font-mono); font-size: .7rem; font-weight: 900; letter-spacing: .12em; }
+  .verification-panel strong { font-size: 1.05rem; }
+  .verification-panel p { margin: 0; color: var(--text-muted); font-size: .84rem; }
+  .verification-panel b { color: var(--text-main); }
+  @media (max-width: 760px) { .verification-panel { grid-template-columns: 1fr; } }
+</style>

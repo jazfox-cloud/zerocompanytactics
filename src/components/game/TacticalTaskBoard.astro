@@ -1,0 +1,34 @@
+---
+interface TaskLink {
+  label: string;
+  href: string;
+  description: string;
+  status: 'VERIFIED' | 'BOUNDED';
+}
+
+interface Props { links: TaskLink[] }
+const { links } = Astro.props;
+---
+
+<div class="task-board">
+  {links.map((link, index) => (
+    <a class="task-entry" href={link.href}>
+      <span class="task-entry__index">0{index + 1}</span>
+      <span class="task-entry__body"><strong>{link.label}</strong><small>{link.description}</small></span>
+      <span class="task-entry__status">{link.status}</span>
+      <span aria-hidden="true" class="task-entry__arrow">→</span>
+    </a>
+  ))}
+</div>
+
+<style>
+  .task-board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-left: 1px solid var(--line-strong); }
+  .task-entry { min-height: 154px; display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto 1fr; gap: .7rem 1rem; padding: 1rem; border-right: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); color: var(--text-main); background: linear-gradient(145deg, var(--surface-panel), var(--surface-raised)); text-decoration: none; }
+  .task-entry:hover { background: var(--surface-raised); box-shadow: inset 4px 0 var(--accent-cyan); }
+  .task-entry__index, .task-entry__status { color: var(--accent-cyan); font-family: var(--font-mono); font-size: .68rem; font-weight: 800; letter-spacing: .11em; }
+  .task-entry__body { align-self: end; display: grid; gap: .35rem; grid-column: 1 / 3; }
+  .task-entry__body strong { font-size: 1.15rem; text-transform: uppercase; letter-spacing: .03em; }
+  .task-entry__body small { color: var(--text-muted); font-size: .86rem; }
+  .task-entry__arrow { align-self: end; color: var(--accent-orange); font-size: 1.5rem; }
+  @media (max-width: 720px) { .task-board { grid-template-columns: 1fr; } }
+</style>

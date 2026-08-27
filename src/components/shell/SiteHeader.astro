@@ -1,8 +1,8 @@
 ---
 import { navigation, routes, siteConfig } from '../../config/index.ts';
 
-const publishedPaths = new Set(routes.filter((route) => route.published).map((route) => route.path));
-const visibleNavigation = navigation.filter((item) => publishedPaths.has(item.href));
+const visiblePaths = new Set(routes.filter((route) => route.published || route.releaseState === 'LOCAL_ONLY').map((route) => route.path));
+const visibleNavigation = navigation.filter((item) => visiblePaths.has(item.href));
 ---
 
 <header class="site-header">
@@ -11,8 +11,12 @@ const visibleNavigation = navigation.filter((item) => publishedPaths.has(item.hr
       <img src={siteConfig.brand.logoPath} alt="" width="36" height="36" />
       <span>{siteConfig.shortName}</span>
     </a>
-    <nav aria-label="Primary navigation">
+    <nav class="desktop-navigation" aria-label="Primary navigation">
       {visibleNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
+    <details class="mobile-navigation">
+      <summary>Menu</summary>
+      <nav aria-label="Mobile navigation">{visibleNavigation.map((item) => <a href={item.href}>{item.label}</a>)}</nav>
+    </details>
   </div>
 </header>

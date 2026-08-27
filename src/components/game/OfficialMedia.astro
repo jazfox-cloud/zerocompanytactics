@@ -1,0 +1,39 @@
+---
+import type { MediaRecord, SourceRecord } from '../../config/schema.ts';
+
+interface Props {
+  media: MediaRecord;
+  source: SourceRecord;
+  priority?: boolean;
+}
+
+const { media, source, priority = false } = Astro.props;
+---
+
+<figure class="official-media" data-media-id={media.id}>
+  <div class="official-media__frame">
+    <img
+      src={media.assetPath}
+      width={media.width}
+      height={media.height}
+      alt={media.alt}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      decoding="async"
+    />
+    <span class="official-media__stamp" aria-hidden="true">OFFICIAL VISUAL</span>
+  </div>
+  <figcaption>
+    <span>{media.attribution}</span>
+    <a href={source.url} rel="noreferrer" target="_blank">View official source <span aria-hidden="true">↗</span></a>
+  </figcaption>
+</figure>
+
+<style>
+  .official-media { margin: 0; }
+  .official-media__frame { position: relative; overflow: hidden; border: 1px solid var(--line-strong); background: var(--surface-deep); clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px)); }
+  img { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+  .official-media__stamp { position: absolute; top: .8rem; left: .8rem; padding: .3rem .55rem; color: var(--surface-deep); background: var(--accent-orange); font-size: .66rem; font-weight: 900; letter-spacing: .12em; }
+  figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .45rem 1rem; padding: .75rem .85rem; border: 1px solid var(--line); border-top: 0; color: var(--text-muted); background: var(--surface-panel); font-size: .78rem; }
+  figcaption a { font-weight: 800; }
+</style>

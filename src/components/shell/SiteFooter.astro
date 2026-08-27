@@ -1,5 +1,9 @@
 ---
 import { siteConfig } from '../../config/site.config.ts';
+import { sources } from '../../config/sources.config.ts';
+
+const officialGamePage = sources.find((source) => source.id === 'source:official-game-page');
+if (!officialGamePage) throw new Error('Missing source:official-game-page');
 ---
 
 <footer class="site-footer">
@@ -9,6 +13,7 @@ import { siteConfig } from '../../config/site.config.ts';
       <p>{siteConfig.disclaimer}</p>
     </div>
     <nav aria-label="Legal">
+      <a href={officialGamePage.url} rel="noreferrer" target="_blank">Official game page ↗</a>
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </nav>

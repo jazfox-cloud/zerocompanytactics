@@ -1,5 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Neutral guide mark">
-  <rect width="64" height="64" rx="16" fill="#102332"/>
-  <path d="M17 18h30v28H17z" fill="none" stroke="#61d7e8" stroke-width="4"/>
-  <path d="M24 27h16M24 35h12" stroke="#d5f8fb" stroke-width="4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Zero Company Field Guide mark</title>
+  <path fill="#0b1115" d="M2 2h48l12 12v48H14L2 50z"/>
+  <path fill="none" stroke="#f08a45" stroke-width="2" d="M8 8h39l9 9v39H17l-9-9z"/>
+  <path fill="none" stroke="#73dce5" stroke-width="2" d="M16 19h29L19 45h29"/>
+  <path fill="#73dce5" d="M16 15h4v4h-4zm28 30h4v4h-4z"/>
 </svg>

@@ -30,3 +30,28 @@ test('source list exposes evidence metadata', async () => {
   assert.match(list, /lastVerified/);
   assert.match(list, /publicAllowed/);
 });
+
+test('official media requires rendered dimensions, attribution, and source fallback', async () => {
+  const media = await source('src/components/game/OfficialMedia.astro');
+  assert.match(media, /<img/);
+  assert.match(media, /width={media\.width}/);
+  assert.match(media, /height={media\.height}/);
+  assert.match(media, /alt={media\.alt}/);
+  assert.match(media, /<figcaption/);
+  assert.match(media, /media\.attribution/);
+  assert.match(media, /View official source/);
+  assert.match(media, /source\.url/);
+});
+
+test('shell exposes local navigation, independent identity, and official destination', async () => {
+  const header = await source('src/components/shell/SiteHeader.astro');
+  const footer = await source('src/components/shell/SiteFooter.astro');
+  const layout = await source('src/layouts/BaseLayout.astro');
+  assert.match(header, /LOCAL_ONLY/);
+  assert.match(header, /siteConfig\.brand\.logoPath/);
+  assert.match(footer, /siteConfig\.disclaimer/);
+  assert.match(footer, /Official game page/);
+  assert.match(footer, /source:official-game-page/);
+  assert.match(layout, /skip-link/);
+  assert.doesNotMatch(`${header}\n${footer}`, /zerocompany-primary-logo|EA[_ -]?logo|Star Wars logo/i);
+});
