@@ -39,3 +39,9 @@ test('rejects media without positive dimensions or route placement', () => {
   assert.match(message, /positive dimensions/);
   assert.match(message, /missing placement route/);
 });
+
+test('rejects non-public media on published routes', () => {
+  const invalid = structuredClone(media);
+  invalid[0].publicAllowed = false;
+  assert.match(validateEvidenceBundle({ facts, media: invalid, routes, sources }).join('\n'), /published route uses ineligible media/);
+});

@@ -11,5 +11,5 @@ export const siteConfig: SiteConfig = {
     logoPath: '/brand/logo.svg',
     faviconPath: '/favicon.ico?v=3',
   },
-  disclaimer: 'Independent guide. Not affiliated with Electronic Arts, Lucasfilm Games, Bit Reactor, or Respawn Entertainment.',
+  disclaimer: 'This website is not endorsed by or affiliated with EA or its licensors. Independent fan guide; game names and media belong to their respective owners.',
 };

@@ -15,14 +15,14 @@ test('all recorded evaluation images exist and match decoded JPEG dimensions', a
   }
 });
 
-test('media records retain source, attribution, alt, and production-rights boundary', () => {
+test('published media records retain source, attribution, alt, and policy boundary', () => {
   const sourceIds = new Set(sources.map((source) => source.id));
   for (const item of media) {
     assert.ok(sourceIds.has(item.sourceId));
     assert.match(item.attribution, /Electronic Arts/);
     assert.ok(item.alt.trim().length > 20);
-    assert.equal(item.publicAllowed, false);
-    assert.match(item.rightsNote, /production/i);
+    assert.equal(item.publicAllowed, true);
+    assert.match(item.rightsNote, /EA content policy/i);
   }
 });
 

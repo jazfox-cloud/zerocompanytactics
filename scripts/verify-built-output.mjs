@@ -23,7 +23,7 @@ function extract(html, pattern) {
   return decode(html.match(pattern)?.[1]?.trim() ?? '');
 }
 
-export function validateContentPageHtml(html, { routePath, expectedLinks = [], expectedMedia, expectedTrailer = false } = {}) {
+export function validateContentPageHtml(html, { routePath, routePublished = false, expectedLinks = [], expectedMedia, expectedTrailer = false } = {}) {
   const errors = [];
   const title = extract(html, /<title>([^<]*)<\/title>/i);
   const description = extract(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
@@ -33,7 +33,9 @@ export function validateContentPageHtml(html, { routePath, expectedLinks = [], e
   if (!title) errors.push('title is missing');
   if (!description) errors.push('description is missing');
   if (h1Count !== 1) errors.push(`page must contain exactly one h1 (found ${h1Count})`);
-  if (!/<meta\s+name="robots"\s+content="noindex, nofollow"/i.test(html)) errors.push('local-only page is missing noindex');
+  const hasNoindex = /<meta\s+name="robots"\s+content="noindex, nofollow"/i.test(html);
+  if (routePublished && hasNoindex) errors.push('published page must not be noindex');
+  if (!routePublished && !hasNoindex) errors.push('local-only page is missing noindex');
   if (!html.includes(`rel="canonical" href="${expectedCanonical}"`)) errors.push(`self canonical is missing: ${expectedCanonical}`);
   if (oldIdentity.test(html)) errors.push('old project identity appears in built HTML');
   oldIdentity.lastIndex = 0;
@@ -91,7 +93,7 @@ export async function validateBuiltOutput(distRoot = path.join(process.cwd(), 'd
       continue;
     }
     const expectedMedia = media.find((record) => record.placement === route.path);
-    for (const error of validateContentPageHtml(html, { routePath: route.path, expectedLinks: expectedLinks[route.path], expectedMedia, expectedTrailer: route.path === '/' })) {
+    for (const error of validateContentPageHtml(html, { routePath: route.path, routePublished: route.published, expectedLinks: expectedLinks[route.path], expectedMedia, expectedTrailer: route.path === '/' })) {
       errors.push(`${route.path}: ${error}`);
     }
     metadata.push({ route: route.path, title: extract(html, /<title>([^<]*)<\/title>/i), description: extract(html, /<meta\s+name="description"\s+content="([^"]*)"/i) });
@@ -110,9 +112,14 @@ export async function validateBuiltOutput(distRoot = path.join(process.cwd(), 'd
   }
 
   const robots = await readFile(path.join(distRoot, 'robots.txt'), 'utf8').catch(() => '');
-  if (robots.trim() !== 'User-agent: *\nDisallow: /') errors.push('robots.txt does not enforce the local-only crawl block');
+  if (robots.trim() !== `User-agent: *\nAllow: /\nSitemap: ${siteConfig.origin}/sitemap.xml`) errors.push('robots.txt does not expose the production crawl policy and sitemap');
   const sitemap = await readFile(path.join(distRoot, 'sitemap.xml'), 'utf8').catch(() => '');
-  if (/<url>/i.test(sitemap)) errors.push('local-only sitemap contains a URL');
+  for (const route of contentRoutes) {
+    const loc = `<loc>${new URL(route.path, siteConfig.origin)}</loc>`;
+    if (!sitemap.includes(loc)) errors.push(`published route is missing from sitemap: ${route.path}`);
+  }
+  const sitemapUrlCount = sitemap.match(/<url>/gi)?.length ?? 0;
+  if (sitemapUrlCount !== contentRoutes.length) errors.push(`sitemap must contain exactly ${contentRoutes.length} content URLs (found ${sitemapUrlCount})`);
   const notFound = await readFile(path.join(distRoot, '404.html'), 'utf8').catch(() => '');
   if (!notFound) errors.push('404.html is missing');
   else if (!/<meta\s+name="robots"\s+content="noindex, nofollow"/i.test(notFound)) errors.push('404.html is missing noindex');
@@ -127,7 +134,7 @@ async function main() {
     process.exitCode = 1;
     return;
   }
-  console.log(`Built output valid (${contentRoutes.length} local-only content routes, ${media.length} visibly contracted media assets).`);
+  console.log(`Built output valid (${contentRoutes.length} published content routes, ${media.length} visibly contracted media assets).`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main();

@@ -31,7 +31,7 @@ test('committed neutral configuration is valid', async () => {
   assert.deepEqual(validateConfig(configBundle), []);
 });
 
-test('committed project identity and local-only content routes are explicit', async () => {
+test('committed project identity and published content routes are explicit', async () => {
   const { features, routes, siteConfig } = await import('../src/config/index.ts');
   assert.equal(siteConfig.name, 'Zero Company Field Guide');
   assert.equal(siteConfig.origin, 'https://zerocompanytactics.com');
@@ -41,7 +41,8 @@ test('committed project identity and local-only content routes are explicit', as
     routes.filter((route) => route.kind === 'content').map((route) => route.path),
     ['/', '/classes/', '/operators/', '/guides/difficulty-permadeath/', '/guides/squad-size-operators/'],
   );
-  assert.ok(routes.filter((route) => route.kind === 'content').every((route) => route.releaseState === 'LOCAL_ONLY' && !route.published));
+  assert.ok(routes.filter((route) => route.kind === 'content').every((route) => route.releaseState === 'PUBLISHED' && route.published && route.sitemap));
+  assert.ok(routes.filter((route) => route.kind === 'legal').every((route) => route.releaseState === 'PUBLISHED' && route.published && !route.sitemap));
 });
 
 test('rejects an origin that is not an absolute URL', () => {

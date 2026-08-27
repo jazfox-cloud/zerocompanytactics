@@ -38,6 +38,8 @@ export function validateEvidenceBundle(bundle: { facts: FactRecord[]; media: Med
     if (!sourceIds.has(item.sourceId)) errors.push(`media references missing source: ${item.id} -> ${item.sourceId}`);
     if (!routePaths.has(item.placement)) errors.push(`media references missing placement route: ${item.id} -> ${item.placement}`);
     if (!isoDate.test(item.lastVerified)) errors.push(`media has invalid verification date: ${item.id}`);
+    const placementRoute = bundle.routes.find((route) => route.path === item.placement);
+    if (placementRoute?.published && !item.publicAllowed) errors.push(`published route uses ineligible media: ${item.id}`);
   }
 
   return [...new Set(errors)];

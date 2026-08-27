@@ -10,23 +10,23 @@ test('command-level evidence and keyword validators accept the committed records
   assert.deepEqual(validateKeywordData(), []);
 });
 
-test('built-page validator accepts a local-only page with one H1 and self canonical', () => {
+test('built-page validator accepts a published page with one H1 and self canonical', () => {
   const favicons = `<link href="/favicon.ico?v=3"><link href="/brand/favicon-32.png?v=3"><link href="/brand/favicon-16.png?v=3"><link href="/brand/favicon-192.png"><link href="/brand/favicon-512.png"><link href="/brand/favicon-192.png?v=3">`;
-  const html = `<!doctype html><html><head><title>Unique title</title><meta name="description" content="Unique description"><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://zerocompanytactics.com/classes/">${favicons}</head><body><h1>Classes</h1><a href="/operators/">Operators</a></body></html>`;
+  const html = `<!doctype html><html><head><title>Unique title</title><meta name="description" content="Unique description"><link rel="canonical" href="https://zerocompanytactics.com/classes/">${favicons}</head><body><h1>Classes</h1><a href="/operators/">Operators</a></body></html>`;
   assert.deepEqual(validateContentPageHtml(html, {
     routePath: '/classes/',
-    expectedLinks: ['/operators/'],
+    expectedLinks: ['/operators/'], routePublished: true,
   }), []);
 });
 
-test('built-page validator rejects missing release, heading, canonical, and link contracts', () => {
+test('built-page validator rejects noindex on published pages plus missing heading, canonical, and links', () => {
   const errors = validateContentPageHtml('<html><head><title></title></head><body><h1>One</h1><h1>Two</h1></body></html>', {
     routePath: '/classes/',
-    expectedLinks: ['/operators/'],
+    expectedLinks: ['/operators/'], routePublished: true,
   });
   assert.match(errors.join('\n'), /title is missing/);
   assert.match(errors.join('\n'), /exactly one h1/);
-  assert.match(errors.join('\n'), /noindex/);
+  assert.match(validateContentPageHtml('<html><head><title>Title</title><meta name="description" content="Description"><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://zerocompanytactics.com/classes/"></head><body><h1>One</h1></body></html>', { routePath: '/classes/', routePublished: true }).join('\n'), /published page must not be noindex/);
   assert.match(errors.join('\n'), /canonical/);
   assert.match(errors.join('\n'), /expected link/);
 });
@@ -35,6 +35,7 @@ test('built-page validator contracts the official trailer embed and fallback', (
   const favicons = `<link href="/favicon.ico?v=3"><link href="/brand/favicon-32.png?v=3"><link href="/brand/favicon-16.png?v=3"><link href="/brand/favicon-192.png"><link href="/brand/favicon-512.png"><link href="/brand/favicon-192.png?v=3">`;
   const base = `<!doctype html><html><head><title>Unique title</title><meta name="description" content="Unique description"><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://zerocompanytactics.com/">${favicons}</head><body><h1>Home</h1>`;
   const trailer = `<iframe src="https://www.youtube-nocookie.com/embed/WxLUZ1omFA8?rel=0" title="STAR WARS Zero Company official announcement trailer" loading="lazy"></iframe><a href="https://www.youtube.com/watch?v=WxLUZ1omFA8">Watch on YouTube</a>`;
-  assert.deepEqual(validateContentPageHtml(`${base}${trailer}</body></html>`, { routePath: '/', expectedTrailer: true }), []);
-  assert.match(validateContentPageHtml(`${base}</body></html>`, { routePath: '/', expectedTrailer: true }).join('\n'), /trailer/i);
+  const publishedBase = base.replace('<meta name="robots" content="noindex, nofollow">', '');
+  assert.deepEqual(validateContentPageHtml(`${publishedBase}${trailer}</body></html>`, { routePath: '/', routePublished: true, expectedTrailer: true }), []);
+  assert.match(validateContentPageHtml(`${publishedBase}</body></html>`, { routePath: '/', routePublished: true, expectedTrailer: true }).join('\n'), /trailer/i);
 });

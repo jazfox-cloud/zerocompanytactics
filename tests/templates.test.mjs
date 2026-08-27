@@ -23,13 +23,13 @@ test('sitemap requires an explicit published release state and both publication 
   assert.match(sitemap, /route\.published && route\.sitemap/);
 });
 
-test('local-only robots policy blocks crawling and does not advertise a sitemap', async () => {
+test('robots policy exposes the production sitemap only when content is published', async () => {
   const robots = await source('src/pages/robots.txt.ts');
   assert.match(robots, /Disallow: \/?/);
   assert.match(robots, /hasPublishedContent/);
 });
 
-test('legal pages accurately disclose the disabled local instrumentation', async () => {
+test('legal pages accurately disclose production independence and disabled instrumentation', async () => {
   for (const path of ['src/pages/privacy/index.astro', 'src/pages/terms/index.astro']) {
     const content = await source(path);
     assert.match(content, /noindex={true}/);
@@ -37,7 +37,10 @@ test('legal pages accurately disclose the disabled local instrumentation', async
   }
   const privacy = await source('src/pages/privacy/index.astro');
   assert.match(privacy, /does not enable analytics or advertising/i);
-  assert.match(privacy, /local-only/i);
+  assert.doesNotMatch(privacy, /local-only/i);
+  const terms = await source('src/pages/terms/index.astro');
+  assert.match(terms, /not endorsed by or affiliated with EA or its licensors/i);
+  assert.match(terms, /EA.*content policy/i);
 });
 
 test('404 uses the configured error route and remains noindex', async () => {
