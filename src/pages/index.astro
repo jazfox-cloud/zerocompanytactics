@@ -1,7 +1,43 @@
 ---
 import HomePage from '../templates/HomePage.astro';
 import { getRoute } from '../config/routes.config.ts';
+import { getFact, getMedia, getSources, getVerificationDate } from '../data/selectors.ts';
+
 const route = getRoute('home');
 if (!route) throw new Error('Missing home route configuration');
+
+const gameType = getFact('fact:game-type');
+const releaseDate = getFact('fact:release-date');
+const specializationCount = getFact('fact:standard-specialization-count');
+const operatorTypes = getFact('fact:operator-types');
+const displayedFacts = [gameType, releaseDate, specializationCount, operatorTypes];
+const officialMedia = getMedia('media:official-keyart');
+const sourceIds = [...new Set([...displayedFacts.flatMap((fact) => fact.sourceIds), officialMedia.sourceId])];
+const sources = getSources(sourceIds);
+const mediaSource = getSources([officialMedia.sourceId])[0];
+const verifiedDate = getVerificationDate([...displayedFacts, ...sources, officialMedia]);
 ---
-<HomePage route={route} eyebrow="Evidence-first starter" heading="Build the guide your evidence can support." intro="A neutral Astro foundation for independent game guide sites. Configure identity, approve routes, and attach evidence before publishing." signal="Only the starter homepage is published. Demonstration templates remain noindex until a consuming project supplies verified content." links={[]} trustItems={[{title:'Official scope',description:'Exact facts require an eligible source.'},{title:'Visible uncertainty',description:'Unknown and stale fields remain labeled.'},{title:'Independent projects',description:'Every game keeps its own data, domain, and release chain.'}]} />
+
+<HomePage
+  route={route}
+  eyebrow="Independent tactical intelligence"
+  heading="Build the squad. Own the decision."
+  intro="A source-bounded guide to STAR WARS Zero Company classes, operators, permadeath, and squad planning. We publish verified answers first and keep launch-build claims visibly scoped."
+  media={officialMedia}
+  mediaSource={mediaSource}
+  tasks={[
+    { label: 'Classes & Specializations', href: '/classes/', description: 'Compare the eight standard Specializations documented by EA.', status: 'BOUNDED' },
+    { label: 'Operators & Characters', href: '/operators/', description: 'Review the officially introduced Authored and Custom Operator structure.', status: 'BOUNDED' },
+    { label: 'Difficulty & Permadeath', href: '/guides/difficulty-permadeath/', description: 'Confirm the documented toggle and standard Injury threshold.', status: 'VERIFIED' },
+    { label: 'Squad Size & Operators', href: '/guides/squad-size-operators/', description: 'Check the official HQ and deployed squad limits.', status: 'VERIFIED' },
+  ]}
+  facts={[
+    { label: gameType.label, value: String(gameType.value) },
+    { label: releaseDate.label, value: String(releaseDate.value) },
+    { label: specializationCount.label, value: `${specializationCount.value} standard roles documented` },
+    { label: operatorTypes.label, value: Array.isArray(operatorTypes.value) ? operatorTypes.value.join(' + ') : String(operatorTypes.value) },
+  ]}
+  sources={sources}
+  verifiedDate={verifiedDate}
+  boundary="The class and Operator material currently relies on official pre-launch records that explicitly said details could change. Complete launch-build data, best builds, and device performance remain unverified."
+/>
