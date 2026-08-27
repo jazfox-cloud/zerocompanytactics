@@ -50,6 +50,59 @@ export interface SourceRecord {
   editorialJudgment: boolean;
 }
 
+export interface FactRecord {
+  id: `fact:${string}`;
+  label: string;
+  value: string | number | boolean | string[];
+  required: boolean;
+  sourceIds: string[];
+  evidenceClass: EvidenceClass;
+  gameVersion: string;
+  lastVerified: string;
+  publicAllowed: boolean;
+  editorialJudgment: boolean;
+  consumers: RouteId[];
+  boundary?: string;
+}
+
+export interface MediaRecord {
+  id: `media:${string}`;
+  assetPath: string;
+  sourceId: string;
+  width: number;
+  height: number;
+  alt: string;
+  placement: string;
+  attribution: string;
+  lastVerified: string;
+  publicAllowed: boolean;
+  rightsNote: string;
+}
+
+export interface KeywordRecord {
+  id: `keyword:${string}`;
+  representative: string;
+  demandSource: 'SEARCH_SIGNAL';
+  userTask: string;
+  owner: RouteId | 'RESEARCH_BACKLOG';
+  evidenceCompleteness: 'COMPLETE' | 'PARTIAL' | 'BLOCKED';
+  directAnswer: 'SATISFIED' | 'RESEARCH_REQUIRED';
+  updateTrigger: string;
+}
+
+export interface ResearchTask {
+  taskId: string;
+  keywordId: KeywordRecord['id'];
+  goal: string;
+  invalidOrMissingField: string;
+  sourceCandidates: string[];
+  collectionMethod: string;
+  validationMethod: string;
+  completionCriteria: string;
+  unblockCondition: string;
+  publicationState: 'APPROVAL_REQUIRED' | 'BLOCKED';
+}
+
 export interface FeatureConfig {
   analytics: boolean;
   advertising: boolean;
