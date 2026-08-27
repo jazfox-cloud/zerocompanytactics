@@ -3,31 +3,47 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/content/Breadcrumbs.astro';
 import QuickAnswer from '../components/content/QuickAnswer.astro';
 import RelatedLinks from '../components/content/RelatedLinks.astro';
-import LastVerified from '../components/evidence/LastVerified.astro';
 import SourceList from '../components/evidence/SourceList.astro';
+import VerificationPanel from '../components/game/VerificationPanel.astro';
 import type { RouteConfig, SourceRecord } from '../config/schema.ts';
 
 interface Props {
   route: RouteConfig;
   question: string;
   answer: string;
+  answerDetail: string;
   verifiedDate: string;
+  evidence: string;
+  boundary: string;
   sources: SourceRecord[];
   related: { label: string; href: string }[];
-  noindex?: boolean;
 }
 
-const { route, question, answer, verifiedDate, sources, related, noindex = !route.published } = Astro.props;
+const { route, question, answer, answerDetail, verifiedDate, evidence, boundary, sources, related } = Astro.props;
 ---
 
-<BaseLayout title={route.title} description={route.description} path={route.path} noindex={noindex}>
+<BaseLayout title={route.title} description={route.description} path={route.path} noindex={!route.published}>
   <article class="shell article">
     <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: route.title }]} />
-    <header><p class="eyebrow">Verified answer</p><h1>{question}</h1><LastVerified date={verifiedDate} /></header>
-    <QuickAnswer title={answer}><p>Use the supporting detail and evidence boundary below before acting on this answer.</p></QuickAnswer>
+    <header><p class="eyebrow">Verified answer</p><h1>{question}</h1><p>Officially documented mechanics, with version and uncertainty kept visible.</p></header>
+    <QuickAnswer title={answer}><p>{answerDetail}</p></QuickAnswer>
     <div class="body"><slot /></div>
+    <VerificationPanel date={verifiedDate} evidence={evidence} boundary={boundary} />
     <SourceList sources={sources} />
     <RelatedLinks links={related} />
   </article>
 </BaseLayout>
-<style>.article{max-width:900px;padding:1.5rem 0 2rem}.article h1{font-size:clamp(2.3rem,7vw,4.8rem);line-height:1.02;letter-spacing:-.05em}.body{max-width:760px;margin:2.5rem 0;color:var(--muted-strong)}</style>
+<style>
+  .article { max-width: 960px; padding: 1.5rem 0 2rem; }
+  .article header { margin: 2rem 0; }
+  .article h1 { max-width: 15ch; margin: .3rem 0 .8rem; font-size: clamp(2.7rem, 7vw, 5.7rem); }
+  .article header > p:last-child { color: var(--text-muted); }
+  .body { max-width: 800px; margin: 2.5rem 0; color: var(--muted-strong); }
+  .body :global(h2) { margin-top: 2.2rem; font-size: clamp(1.8rem, 4vw, 2.8rem); }
+  .body :global(dl) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; padding: 1px; background: var(--line); }
+  .body :global(dl div) { padding: 1rem; background: var(--surface-panel); }
+  .body :global(dt) { color: var(--accent-cyan); font-family: var(--font-mono); font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+  .body :global(dd) { margin: .5rem 0 0; color: var(--text-main); font-weight: 750; }
+  .article :global(.verification-panel), .article :global(.sources), .article :global(.related-links) { margin-top: 1rem; }
+  @media (max-width: 620px) { .body :global(dl) { grid-template-columns: 1fr; } }
+</style>

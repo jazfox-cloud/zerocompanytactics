@@ -1,0 +1,43 @@
+---
+import AnswerPage from '../../../templates/AnswerPage.astro';
+import { getRoute } from '../../../config/routes.config.ts';
+import { getFacts, getSources, getVerificationDate } from '../../../data/selectors.ts';
+
+const route = getRoute('squad-size-operators');
+if (!route) throw new Error('Missing squad-size route configuration');
+const [hqLimit, startingLimit, squadLimit, hawksRule] = getFacts([
+  'fact:hq-operator-limit',
+  'fact:starting-operator-limit',
+  'fact:standard-squad-limit',
+  'fact:hawks-mission-requirement',
+]);
+const displayedFacts = [hqLimit, startingLimit, squadLimit, hawksRule];
+const sources = getSources([...new Set(displayedFacts.flatMap((fact) => fact.sourceIds))]);
+const verifiedDate = getVerificationDate([...displayedFacts, ...sources]);
+const quickAnswer = `The official Q&A says the HQ can hold up to ${hqLimit.value} Operators, you begin with a maximum of ${startingLimit.value}, and the standard deployed squad limit is ${squadLimit.value}.`;
+---
+
+<AnswerPage
+  route={route}
+  question="How many Operators can you have in Zero Company?"
+  answer={quickAnswer}
+  answerDetail="HQ capacity, the starting roster, and the deployed squad are three different limits."
+  verifiedDate={verifiedDate}
+  evidence="EA official Zero Company Q&A"
+  boundary="The official Q&A documents a standard deployed squad limit. Certain missions can add controllable characters beyond that standard limit, so mission headcount can differ."
+  sources={sources}
+  related={[
+    { label: 'Review verified Operators', href: '/operators/' },
+    { label: 'Compare classes and Specializations', href: '/classes/' },
+  ]}
+>
+  <h2>Keep the four roster rules separate</h2>
+  <dl>
+    <div><dt>HQ capacity</dt><dd>Up to {hqLimit.value} Operators</dd></div>
+    <div><dt>Starting roster</dt><dd>A maximum of seven Operators</dd></div>
+    <div><dt>Standard squad</dt><dd>Up to four Operators</dd></div>
+    <div><dt>{hawksRule.label}</dt><dd>{hawksRule.value}</dd></div>
+  </dl>
+  <h2>Mission exception</h2>
+  <p>Certain missions can add controllable characters beyond the standard deployed squad limit. The Q&A also says Hawks is required for story missions, while skirmish missions permit any combination of Operators.</p>
+</AnswerPage>

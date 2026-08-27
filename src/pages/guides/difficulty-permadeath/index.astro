@@ -1,0 +1,35 @@
+---
+import AnswerPage from '../../../templates/AnswerPage.astro';
+import { getRoute } from '../../../config/routes.config.ts';
+import { getFacts, getSources, getVerificationDate } from '../../../data/selectors.ts';
+
+const route = getRoute('difficulty-permadeath');
+if (!route) throw new Error('Missing difficulty and permadeath route configuration');
+const [permadeath, threshold] = getFacts(['fact:permadeath-toggle', 'fact:standard-injury-threshold']);
+const sources = getSources([...new Set([...permadeath.sourceIds, ...threshold.sourceIds])]);
+const verifiedDate = getVerificationDate([permadeath, threshold, ...sources]);
+const quickAnswer = `Permadeath is ${String(permadeath.value).toLowerCase()} On standard difficulty, the documented permanent-death threshold is ${String(threshold.value).toLowerCase()}.`;
+---
+
+<AnswerPage
+  route={route}
+  question="Can you turn off permadeath in Zero Company?"
+  answer={quickAnswer}
+  answerDetail="The setting and the standard-difficulty threshold are separate facts from two first-party records."
+  verifiedDate={verifiedDate}
+  evidence="EA official Q&A and official gameplay deep dive"
+  boundary="The published records establish the toggle and the standard-difficulty threshold. Injury rules and consequences for other difficulty levels remain unverified."
+  sources={sources}
+  related={[
+    { label: 'Compare classes and Specializations', href: '/classes/' },
+    { label: 'Check squad size and Operator limits', href: '/guides/squad-size-operators/' },
+  ]}
+>
+  <h2>What the official sources establish</h2>
+  <dl>
+    <div><dt>{permadeath.label}</dt><dd>{permadeath.value}</dd></div>
+    <div><dt>{threshold.label}</dt><dd>{threshold.value}</dd></div>
+  </dl>
+  <h2>What is not confirmed here</h2>
+  <p>The official records used for this page do not establish how every difficulty setting changes Injury accumulation or whether other campaign modifiers alter the threshold. Those details need launch-build testing before publication.</p>
+</AnswerPage>
