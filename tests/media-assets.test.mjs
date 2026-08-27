@@ -32,6 +32,12 @@ test('public media directory contains no unrecorded files', async () => {
   assert.deepEqual(entries.sort(), [...recorded].sort());
 });
 
+test('tactical image alt text describes the retained official asset', () => {
+  const tactical = media.find((item) => item.id === 'media:tactical-gameplay');
+  assert.match(tactical.alt, /Holotable mission map/i);
+  assert.doesNotMatch(tactical.alt, /squad encounter|isometric battlefield/i);
+});
+
 test('JPEG parser rejects non-JPEG input', () => {
   assert.throws(() => readJpegDimensions(Buffer.from('not an image')), /JPEG/);
 });

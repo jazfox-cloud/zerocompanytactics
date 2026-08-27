@@ -15,7 +15,7 @@ export const media: MediaRecord[] = [
   },
   {
     id: 'media:tactical-gameplay', assetPath: '/media/tactical-gameplay.jpg', sourceId: 'source:official-gameplay-deep-dive',
-    width: 1920, height: 1080, alt: 'Official Zero Company tactical gameplay image showing a squad encounter from the isometric battlefield view.',
+    width: 1920, height: 1080, alt: 'Official Zero Company Holotable mission map showing regions, crisis missions, rewards, and an Operator briefing panel.',
     placement: '/classes/', attribution: 'Electronic Arts — official gameplay deep dive', lastVerified: '2026-08-27',
     publicAllowed: false, rightsNote: 'Official-hosted asset retained for local evaluation; production reuse requires a separate rights review.',
   },

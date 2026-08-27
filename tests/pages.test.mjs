@@ -33,6 +33,8 @@ test('classes owner renders verified standard Specializations with a coverage bo
   assert.match(template, /OfficialMedia/);
   assert.match(template, /SourceList/);
   assert.equal((template.match(/<h1/g) ?? []).length, 1);
+  assert.match(template, /overflow-wrap:\s*normal/);
+  assert.match(template, /word-break:\s*normal/);
   assert.doesNotMatch(`${page}\n${template}`, /best class|tier list/i);
 });
 
