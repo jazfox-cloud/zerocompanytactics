@@ -16,7 +16,7 @@
     "validate:media": "node scripts/validate-media-assets.mjs",
     "validate:favicons": "node scripts/validate-favicon-assets.mjs",
     "validate:output": "node scripts/verify-built-output.mjs",
-    "validate:residue": "node scripts/scan-project-residue.mjs",
+    "validate:residue": "RESIDUE_ALLOWED_IDENTITY=G-P95CVSH72Z node scripts/scan-project-residue.mjs",
     "validate:routes": "node scripts/verify-routes.mjs",
     "verify": "npm run validate:config && npm run validate:routes && npm run validate:residue && npm run validate:evidence && npm run validate:keywords && npm run validate:media && npm run validate:favicons && npm run check && npm test && npm run build && npm run validate:output"
   },

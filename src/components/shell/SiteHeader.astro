@@ -3,6 +3,7 @@ import { navigation, routes, siteConfig } from '../../config/index.ts';
 
 const visiblePaths = new Set(routes.filter((route) => route.published || route.releaseState === 'LOCAL_ONLY').map((route) => route.path));
 const visibleNavigation = navigation.filter((item) => visiblePaths.has(item.href));
+const analyticsItemForPath = (href: string) => href === '/' ? 'home' : href.split('/').filter(Boolean).at(-1) ?? 'home';
 ---
 
 <header class="site-header">
@@ -12,11 +13,11 @@ const visibleNavigation = navigation.filter((item) => visiblePaths.has(item.href
       <span>{siteConfig.shortName}</span>
     </a>
     <nav class="desktop-navigation" aria-label="Primary navigation">
-      {visibleNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+      {visibleNavigation.map((item) => <a href={item.href} data-analytics-item={analyticsItemForPath(item.href)}>{item.label}</a>)}
     </nav>
     <details class="mobile-navigation">
       <summary>Menu</summary>
-      <nav aria-label="Mobile navigation">{visibleNavigation.map((item) => <a href={item.href}>{item.label}</a>)}</nav>
+      <nav aria-label="Mobile navigation">{visibleNavigation.map((item) => <a href={item.href} data-analytics-item={analyticsItemForPath(item.href)}>{item.label}</a>)}</nav>
     </details>
   </div>
 </header>

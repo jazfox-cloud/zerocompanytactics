@@ -36,7 +36,7 @@ test('committed project identity and published content routes are explicit', asy
   assert.equal(siteConfig.name, 'Zero Company Field Guide');
   assert.equal(siteConfig.origin, 'https://zerocompanytactics.com');
   assert.equal(siteConfig.brand.faviconPath, '/favicon.ico?v=3');
-  assert.deepEqual(features, { analytics: false, advertising: false, localization: false, sitemap: true });
+  assert.deepEqual(features, { analytics: true, advertising: false, localization: false, sitemap: true });
   assert.deepEqual(
     routes.filter((route) => route.kind === 'content').map((route) => route.path),
     ['/', '/classes/', '/operators/', '/guides/difficulty-permadeath/', '/guides/squad-size-operators/'],

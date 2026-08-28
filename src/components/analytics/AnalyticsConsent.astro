@@ -1,0 +1,30 @@
+<aside id="analytics-consent" class="analytics-consent" aria-labelledby="analytics-consent-title" hidden>
+  <div>
+    <strong id="analytics-consent-title">Optional analytics</strong>
+    <p>Allow optional Google Analytics measurements so we can understand which Zero Company guide pages are useful. Advertising storage stays disabled.</p>
+    <a href="/privacy/">Privacy details</a>
+  </div>
+  <div class="analytics-actions">
+    <button id="analytics-reject" type="button">Reject</button>
+    <button id="analytics-accept" type="button">Allow analytics</button>
+  </div>
+</aside>
+
+<script>
+  import { analyticsConfig } from '../../config/analytics.config.ts';
+  import { setupAnalyticsConsent } from '../../lib/analytics-consent.mjs';
+
+  setupAnalyticsConsent({ window, document, ...analyticsConfig });
+</script>
+
+<style>
+  .analytics-consent { position: fixed; z-index: 1000; right: 1rem; bottom: 1rem; left: 1rem; max-width: 920px; margin: auto; padding: 1rem 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; border: 1px solid var(--line-strong); color: var(--text-main); background: var(--surface-panel); box-shadow: 0 24px 60px hsl(203 40% 2% / .7); }
+  .analytics-consent[hidden] { display: none; }
+  .analytics-consent strong { display: block; margin-bottom: .25rem; font-family: var(--font-display); text-transform: uppercase; }
+  .analytics-consent p { max-width: 68ch; margin: 0; color: var(--muted-strong); font-size: .88rem; line-height: 1.5; }
+  .analytics-consent a { min-height: 44px; display: inline-flex; align-items: center; font-size: .82rem; }
+  .analytics-actions { display: flex; flex: 0 0 auto; gap: .55rem; }
+  .analytics-actions button { min-height: 44px; padding: .65rem .9rem; border: 1px solid var(--line-strong); color: var(--text-main); background: transparent; font: inherit; font-size: .84rem; font-weight: 800; cursor: pointer; }
+  .analytics-actions #analytics-accept { border-color: var(--accent-orange); color: var(--text-dark); background: var(--accent-orange); }
+  @media (max-width: 700px) { .analytics-consent { align-items: stretch; flex-direction: column; gap: .85rem; } .analytics-actions { display: grid; grid-template-columns: 1fr 1fr; } .analytics-actions button { width: 100%; } }
+</style>

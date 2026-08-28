@@ -9,18 +9,30 @@ async function source(path) {
 test('base layout delegates SEO and renders the shared shell', async () => {
   const layout = await source('src/layouts/BaseLayout.astro');
   assert.match(layout, /SeoHead/);
+  assert.match(layout, /AnalyticsConsent/);
   assert.match(layout, /SiteHeader/);
   assert.match(layout, /SiteFooter/);
   assert.match(layout, /<main/);
   assert.doesNotMatch(layout, /https:\/\/[a-z0-9-]+\.(com|net|org)/i);
 });
 
-test('SEO derives identity from configuration and gates analytics', async () => {
+test('SEO derives identity from configuration and does not load analytics directly', async () => {
   const seo = await source('src/components/seo/SeoHead.astro');
   assert.match(seo, /siteConfig\.origin/);
-  assert.match(seo, /features\.analytics/);
-  assert.match(seo, /PUBLIC_GA4_ID/);
+  assert.doesNotMatch(seo, /googletagmanager|gtag\(|PUBLIC_GA4_ID/);
   assert.doesNotMatch(seo, /G-[A-Z0-9]{6,}/);
+});
+
+test('footer exposes analytics choices and privacy states the consent boundary', async () => {
+  const [footer, privacy] = await Promise.all([
+    source('src/components/shell/SiteFooter.astro'),
+    source('src/pages/privacy/index.astro'),
+  ]);
+
+  assert.match(footer, /id="analytics-choices"/);
+  assert.match(privacy, /denied by default/i);
+  assert.match(privacy, /loads only after/i);
+  assert.match(privacy, /ad user data/i);
 });
 
 test('SEO exposes cache-safe favicon candidates in deterministic order', async () => {

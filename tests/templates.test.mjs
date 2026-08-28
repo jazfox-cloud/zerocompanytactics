@@ -29,14 +29,16 @@ test('robots policy exposes the production sitemap only when content is publishe
   assert.match(robots, /hasPublishedContent/);
 });
 
-test('legal pages accurately disclose production independence and disabled instrumentation', async () => {
+test('legal pages accurately disclose production independence and consent-gated instrumentation', async () => {
   for (const path of ['src/pages/privacy/index.astro', 'src/pages/terms/index.astro']) {
     const content = await source(path);
     assert.match(content, /noindex={true}/);
     assert.doesNotMatch(content, /scaffold/i);
   }
   const privacy = await source('src/pages/privacy/index.astro');
-  assert.match(privacy, /does not enable analytics or advertising/i);
+  assert.match(privacy, /denied by default/i);
+  assert.match(privacy, /loads only after/i);
+  assert.match(privacy, /advertising storage.*disabled/i);
   assert.doesNotMatch(privacy, /local-only/i);
   const terms = await source('src/pages/terms/index.astro');
   assert.match(terms, /not endorsed by or affiliated with EA or its licensors/i);
