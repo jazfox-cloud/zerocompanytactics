@@ -8,10 +8,14 @@ import { media } from '../src/data/media.ts';
 import { sources } from '../src/config/sources.config.ts';
 
 const contentRoutes = routes.filter((route) => route.kind === 'content');
+const auxiliaryRoutes = routes.filter((route) => route.kind !== 'content');
 const oldIdentity = /example game guide|wardogs|dragon\s*sword|dragonswordguide|resonance\s+guide|aliens[\s-]*fireteam/gi;
+const adScript = '<script async="async" data-cfasync="false" src="https://pl31149274.profitableratecpmnetwork.com/3abff3f2cb7a14ddfe1342f5327d0837/invoke.js"></script>';
+const adContainer = '<div id="container-3abff3f2cb7a14ddfe1342f5327d0837"></div>';
 
 function htmlFileForRoute(distRoot, routePath) {
   if (routePath === '/') return path.join(distRoot, 'index.html');
+  if (routePath.endsWith('.html')) return path.join(distRoot, routePath.replace(/^\//, ''));
   return path.join(distRoot, routePath.replace(/^\//, ''), 'index.html');
 }
 
@@ -23,12 +27,21 @@ function extract(html, pattern) {
   return decode(html.match(pattern)?.[1]?.trim() ?? '');
 }
 
+export function validateAdUnitHtml(html) {
+  const errors = [];
+  if (html.split(adScript).length !== 2) errors.push('configured ad unit script must appear exactly once');
+  if (html.split(adContainer).length !== 2) errors.push('configured ad unit container must appear exactly once');
+  return errors;
+}
+
 export function validateContentPageHtml(html, { routePath, routePublished = false, expectedLinks = [], expectedMedia, expectedTrailer = false } = {}) {
   const errors = [];
   const title = extract(html, /<title>([^<]*)<\/title>/i);
   const description = extract(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
   const expectedCanonical = new URL(routePath, siteConfig.origin).toString();
   const h1Count = html.match(/<h1(?:\s|>)/gi)?.length ?? 0;
+
+  errors.push(...validateAdUnitHtml(html));
 
   if (!title) errors.push('title is missing');
   if (!description) errors.push('description is missing');
@@ -101,6 +114,16 @@ export async function validateBuiltOutput(distRoot = path.join(process.cwd(), 'd
       try { await access(path.join(distRoot, expectedMedia.assetPath.replace(/^\//, ''))); }
       catch { errors.push(`${route.path}: referenced media file is absent from dist: ${expectedMedia.assetPath}`); }
     }
+  }
+
+  for (const route of auxiliaryRoutes) {
+    const file = htmlFileForRoute(distRoot, route.path);
+    const html = await readFile(file, 'utf8').catch(() => '');
+    if (!html) {
+      errors.push(`built route is missing: ${route.path}`);
+      continue;
+    }
+    for (const error of validateAdUnitHtml(html)) errors.push(`${route.path}: ${error}`);
   }
 
   for (const field of ['title', 'description']) {

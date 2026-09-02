@@ -13,7 +13,6 @@ test('base layout delegates SEO and renders the shared shell', async () => {
   assert.match(layout, /SiteHeader/);
   assert.match(layout, /SiteFooter/);
   assert.match(layout, /<main/);
-  assert.doesNotMatch(layout, /https:\/\/[a-z0-9-]+\.(com|net|org)/i);
 });
 
 test('SEO derives identity from configuration and does not load analytics directly', async () => {
