@@ -77,8 +77,8 @@ test('squad-size guide keeps HQ, starting roster, deployed squad, and Hawks scop
   assert.match(page, /fact:standard-squad-limit/);
   assert.match(page, /fact:hawks-mission-requirement/);
   assert.match(page, /hqLimit\.value/);
-  assert.match(page, /seven Operators/);
-  assert.match(page, /four Operators/);
+  assert.match(page, /startingLimit\.value/);
+  assert.match(page, /squadLimit\.value/);
   assert.match(page, /Certain missions can add controllable characters/);
   assert.doesNotMatch(page, /unlimited|always exactly four/i);
 });

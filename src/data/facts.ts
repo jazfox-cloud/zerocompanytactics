@@ -93,6 +93,10 @@ export const facts: FactRecord[] = [
     sourceIds: deepDive, evidenceClass: 'OFFICIAL', gameVersion: 'Official pre-launch deep dive', lastVerified: '2026-08-27', publicAllowed: true, editorialJudgment: false, consumers: ['operators'], boundary: deepDiveBoundary,
   },
   {
+    id: 'fact:hq-capacity-expansion', label: 'How HQ capacity increases', value: 'HQ roster capacity increases through upgrades at The Den, story progression, and new Authored Operators joining the squad.', required: true,
+    sourceIds: officialQa, evidenceClass: 'OFFICIAL', gameVersion: 'Official Q&A, 2026-07-21', lastVerified: '2026-09-08', publicAllowed: true, editorialJudgment: false, consumers: ['squad-size-operators'], boundary: 'The Q&A describes HQ capacity growth, not an increase to the standard deployed squad limit. Specific upgrade costs and unlock chapters are not documented here.',
+  },
+  {
     id: 'fact:hq-operator-limit', label: 'Current HQ operator limit', value: 20, required: true,
     sourceIds: officialQa, evidenceClass: 'OFFICIAL', gameVersion: 'Official Q&A, 2026-07-21', lastVerified: '2026-08-27', publicAllowed: true, editorialJudgment: false, consumers: ['squad-size-operators'],
   },

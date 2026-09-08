@@ -5,39 +5,47 @@ import { getFacts, getSources, getVerificationDate } from '../../../data/selecto
 
 const route = getRoute('squad-size-operators');
 if (!route) throw new Error('Missing squad-size route configuration');
-const [hqLimit, startingLimit, squadLimit, hawksRule] = getFacts([
+const [hqLimit, startingLimit, squadLimit, hawksRule, capacityExpansion] = getFacts([
   'fact:hq-operator-limit',
   'fact:starting-operator-limit',
   'fact:standard-squad-limit',
   'fact:hawks-mission-requirement',
+  'fact:hq-capacity-expansion',
 ]);
-const displayedFacts = [hqLimit, startingLimit, squadLimit, hawksRule];
+const displayedFacts = [hqLimit, startingLimit, squadLimit, hawksRule, capacityExpansion];
 const sources = getSources([...new Set(displayedFacts.flatMap((fact) => fact.sourceIds))]);
 const verifiedDate = getVerificationDate([...displayedFacts, ...sources]);
-const quickAnswer = `The official Q&A says the HQ can hold up to ${hqLimit.value} Operators, you begin with a maximum of ${startingLimit.value}, and the standard deployed squad limit is ${squadLimit.value}.`;
+const quickAnswer = `The standard squad is up to ${squadLimit.value} Operators in combat. Your HQ roster starts with capacity for ${startingLimit.value} and can grow to ${hqLimit.value}, according to EA's official Q&A.`;
 ---
 
 <AnswerPage
   route={route}
-  question="How many Operators can you have in Zero Company?"
+  question="What is the maximum squad size in Zero Company?"
   answer={quickAnswer}
   answerDetail="HQ capacity, the starting roster, and the deployed squad are three different limits."
   verifiedDate={verifiedDate}
   evidence="EA official Zero Company Q&A"
-  boundary="The official Q&A documents a standard deployed squad limit. Certain missions can add controllable characters beyond that standard limit, so mission headcount can differ."
+  boundary="These limits come from EA's July 21, 2026 pre-launch Q&A, rechecked on September 8. They are not a new launch-build test. Certain missions can add controllable characters beyond the standard squad limit."
   sources={sources}
   related={[
     { label: 'Review verified Operators', href: '/operators/' },
     { label: 'Compare classes and Specializations', href: '/classes/' },
+    { label: 'Understand difficulty and permadeath', href: '/guides/difficulty-permadeath/' },
   ]}
 >
-  <h2>Keep the four roster rules separate</h2>
+  <h2>Combat squad size vs. HQ roster capacity</h2>
   <dl>
+    <div><dt>Standard combat squad</dt><dd>Up to {squadLimit.value} Operators</dd></div>
     <div><dt>HQ capacity</dt><dd>Up to {hqLimit.value} Operators</dd></div>
-    <div><dt>Starting roster</dt><dd>A maximum of seven Operators</dd></div>
-    <div><dt>Standard squad</dt><dd>Up to four Operators</dd></div>
+    <div><dt>Starting HQ capacity</dt><dd>A maximum of {startingLimit.value} Operators</dd></div>
     <div><dt>{hawksRule.label}</dt><dd>{hawksRule.value}</dd></div>
   </dl>
-  <h2>Mission exception</h2>
+  <h2>Can you increase squad size?</h2>
+  <p>You can increase how many Operators your HQ roster can hold. That is different from increasing the standard combat squad: the Q&A still describes a limit of {squadLimit.value} deployed Operators. A larger roster gives you more Operators to choose from, not {hqLimit.value} regular deployment slots.</p>
+  <h2>How does HQ roster capacity increase?</h2>
+  <p>{capacityExpansion.value}</p>
+  <p>The starting maximum of {startingLimit.value} is a capacity limit, not a promise that all those slots are filled immediately. The official answer identifies the routes to expansion but does not give a complete upgrade order, prices, or chapter-by-chapter unlock schedule.</p>
+  <h2>Can a mission give you more than four characters?</h2>
   <p>Certain missions can add controllable characters beyond the standard deployed squad limit. The Q&A also says Hawks is required for story missions, while skirmish missions permit any combination of Operators.</p>
+  <p>For character identities, see the <a href="/operators/">Operators guide</a>. For the documented consequences of losing an Operator, see <a href="/guides/difficulty-permadeath/">difficulty and permadeath</a>.</p>
 </AnswerPage>
