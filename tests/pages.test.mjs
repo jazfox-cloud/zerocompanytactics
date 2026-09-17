@@ -71,6 +71,7 @@ test('difficulty guide answers the documented permadeath question and names its 
 
 test('squad-size guide keeps HQ, starting roster, deployed squad, and Hawks scopes distinct', async () => {
   const page = await source('src/pages/guides/squad-size-operators/index.astro');
+  const routes = await source('src/config/routes.config.ts');
   assert.match(page, /getFacts/);
   assert.match(page, /fact:hq-operator-limit/);
   assert.match(page, /fact:starting-operator-limit/);
@@ -81,4 +82,5 @@ test('squad-size guide keeps HQ, starting roster, deployed squad, and Hawks scop
   assert.match(page, /squadLimit\.value/);
   assert.match(page, /Certain missions can add controllable characters/);
   assert.doesNotMatch(page, /unlimited|always exactly four/i);
+  assert.match(routes, /Compare Zero Company's four-Operator combat squad with its seven-slot starting roster and 20-Operator HQ cap, including upgrades and mission exceptions\./);
 });

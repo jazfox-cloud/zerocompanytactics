@@ -45,7 +45,7 @@ export const routes: RouteConfig[] = [
     id: 'squad-size-operators',
     path: '/guides/squad-size-operators/',
     title: 'Zero Company Squad Size: 4 in Combat, Up to 20 at HQ',
-    description: 'Compare the standard four-Operator squad with the starting seven-slot HQ roster and 20-Operator HQ limit. Learn how roster capacity increases and when mission exceptions apply.',
+    description: "Compare Zero Company's four-Operator combat squad with its seven-slot starting roster and 20-Operator HQ cap, including upgrades and mission exceptions.",
     kind: 'content',
     releaseState: 'PUBLISHED',
     published: true,
