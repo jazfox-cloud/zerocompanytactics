@@ -28,6 +28,8 @@ const canonical = new URL(path, siteConfig.origin).toString();
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
+<meta property="og:image" content={new URL('/media/zero-company-keyart.jpg', siteConfig.origin).toString()} />
+<meta property="og:image:alt" content="Official Zero Company key art showing Hawks and a mixed squad against a galactic battlefield backdrop." />
 <meta name="twitter:card" content="summary" />
 <title>{title}</title>
 {schema.map((item) => <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />)}
