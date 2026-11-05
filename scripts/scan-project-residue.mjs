@@ -17,6 +17,7 @@ const allowedHosts = new Set([
   'www.youtube-nocookie.com',
   'www.googletagmanager.com',
   'pl31149274.profitableratecpmnetwork.com',
+  'adsterra.com',
   'www.sitemaps.org',
   'www.w3.org',
 ]);

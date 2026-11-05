@@ -34,6 +34,18 @@ test('footer exposes analytics choices and privacy states the consent boundary',
   assert.match(privacy, /ad user data/i);
 });
 
+test('privacy distinguishes the third-party advertising request from analytics choices', async () => {
+  const privacy = await source('src/pages/privacy/index.astro');
+
+  assert.match(privacy, /profitableratecpmnetwork\.com/i);
+  assert.match(privacy, /IP address/i);
+  assert.match(privacy, /browser or device information/i);
+  assert.match(privacy, /cookies, pixels, or similar technologies/i);
+  assert.match(privacy, /does not block or withdraw the third-party advertising request/i);
+  assert.match(privacy, /does not currently provide a separate advertising choice/i);
+  assert.match(privacy, /https:\/\/adsterra\.com\/cookies\//i);
+});
+
 test('SEO exposes cache-safe favicon candidates in deterministic order', async () => {
   const seo = await source('src/components/seo/SeoHead.astro');
   const expected = [

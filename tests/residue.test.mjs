@@ -25,6 +25,7 @@ test('allows only approved project, official evidence, and generic integration d
     'https://www.youtube-nocookie.com/embed/official',
     'https://www.googletagmanager.com',
     'https://pl31149274.profitableratecpmnetwork.com/3abff3f2cb7a14ddfe1342f5327d0837/invoke.js',
+    'https://adsterra.com/cookies/',
   ].join(' ');
   assert.deepEqual(scanText(approved), []);
 });
